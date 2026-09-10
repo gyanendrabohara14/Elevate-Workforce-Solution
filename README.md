@@ -144,3 +144,18 @@ The application already calls the Gemini REST API for job descriptions, cover le
 4. Admin approves → jobs become public (only `Active` and non-expired jobs are ever visible).
 5. Job seekers apply; employers pipeline candidates; AI assists with matching.
 
+## Deployment
+
+This is an ASP.NET Core server application and cannot be deployed directly as a static site on Netlify. Deploy the root `Dockerfile` to a container-capable host such as Render, Railway, or Azure App Service.
+
+Configure these production environment variables on the hosting provider:
+
+- `ASPNETCORE_ENVIRONMENT=Production`
+- `ConnectionStrings__DefaultConnection` — managed PostgreSQL connection string
+- `ConnectionStrings__Redis` — managed Redis connection string, or omit it to use the in-memory fallback
+- `Jwt__Key`, `Jwt__Issuer`, `Jwt__Audience`, `Jwt__ExpirationMinutes`
+- `Email__Host`, `Email__Port`, `Email__FromEmail`, `Email__FromName`, `Email__UseSsl`
+- `Gemini__ApiKey`, `Gemini__Endpoint`, `Gemini__Model`
+
+The service listens on port `8080` inside the container. Do not use the local Docker Compose ports or development passwords in production.
+
