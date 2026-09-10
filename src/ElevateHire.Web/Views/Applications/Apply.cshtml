@@ -1,0 +1,87 @@
+@model ApplyViewModel
+@{
+    ViewData["Title"] = "Apply";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>Apply for position</h1>
+        <p>@Model.JobTitle · @Model.CompanyName</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form asp-action="Apply" method="post" enctype="multipart/form-data" class="panel">
+                <input type="hidden" asp-for="JobId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <h5 class="mb-3">Resume</h5>
+                <div class="mb-3">
+                    @if (Model.HasResume)
+                    {
+                        <div class="alert alert-secondary d-flex align-items-center justify-content-between">
+                            <span>You have a resume on file.</span>
+                            <div>
+                                <a asp-controller="JobSeeker" asp-action="DownloadResume" class="btn btn-sm btn-outline">View</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="resume">Upload a resume (PDF, DOC, DOCX · max 5 MB)</label>
+                    <input type="file" id="resume" name="Resume" class="form-control" accept=".pdf,.doc,.docx" />
+                    <span asp-validation-for="Resume" class="text-danger"></span>
+                </div>
+
+                <h5 class="mt-4 mb-3">Cover letter</h5>
+                <div class="mb-2">
+                    <button type="button" id="aiCoverLetter" class="btn btn-sm btn-soft" data-job-id="@Model.JobId">Generate with AI</button>
+                </div>
+                <div class="mb-3">
+                    <textarea asp-for="CoverLetter" class="form-control" rows="8" placeholder="Introduce yourself and why you're a great fit for this role..."></textarea>
+                    <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                    <small id="aiCoverStatus" class="text-muted"></small>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Submit application</button>
+                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.JobId" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("aiCoverLetter").addEventListener("click", function () {
+            var btn = this;
+            var jobId = btn.getAttribute("data-job-id");
+            var status = document.getElementById("aiCoverStatus");
+            status.textContent = "Generating...";
+            btn.disabled = true;
+
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            fetch("/ai/generatecoverletter/" + jobId, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "__RequestVerificationToken=" + encodeURIComponent(token.value),
+                credentials: "same-origin"
+            }).then(function (r) { return r.json(); }).then(function (data) {
+                btn.disabled = false;
+                if (data.success) {
+                    document.getElementById("CoverLetter").value = data.coverLetter;
+                    status.textContent = "AI draft generated. Please review and edit before submitting.";
+                } else {
+                    status.textContent = data.error || "AI assistance temporarily unavailable.";
+                }
+            }).catch(function () {
+                btn.disabled = false;
+                status.textContent = "AI assistance temporarily unavailable.";
+            });
+        });
+    </script>
+}

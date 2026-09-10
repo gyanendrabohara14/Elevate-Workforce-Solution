@@ -1,0 +1,107 @@
+@model UserListViewModel
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <h1>Users</h1>
+        <p>Search, filter and manage all registered accounts.</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <form method="get" class="panel mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label" for="keyword">Search</label>
+                <input id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Name or email" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="role">Role</label>
+                <select id="role" name="role" class="form-select">
+                    <option value="">All roles</option>
+                    @foreach (var r in Enum.GetNames<UserRole>())
+                    {
+                        <option value="@r" selected="@(Model.Role == r)">@r</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">Any</option>
+                    <option value="active" selected="@(Model.Status == "active")">Active</option>
+                    <option value="disabled" selected="@(Model.Status == "disabled")">Disabled</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td><a asp-controller="Admin" asp-action="UserDetails" asp-route-id="@user.Id">@user.FullName</a></td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td>@(user.IsActive ? "Active" : "Disabled")</td>
+                            <td>@user.CreatedAt.ToString("MMM d, yyyy")</td>
+                            <td class="text-end">
+                                <a asp-controller="Admin" asp-action="UserDetails" asp-route-id="@user.Id" class="btn btn-sm btn-ghost">View</a>
+                                @if (user.Role != UserRole.Admin)
+                                {
+                                    <form asp-controller="Admin" asp-action="ToggleUser" asp-route-id="@user.Id" method="post" class="d-inline" onsubmit="return confirm('@(user.IsActive ? "Disable" : "Enable") this user?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-ghost">@(user.IsActive ? "Disable" : "Enable")</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="User pages">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Users"
+                       asp-route-keyword="@Model.Keyword" asp-route-role="@Model.Role" asp-route-status="@Model.Status" asp-route-page="@(Model.Page - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" asp-controller="Admin" asp-action="Users"
+                           asp-route-keyword="@Model.Keyword" asp-route-role="@Model.Role" asp-route-status="@Model.Status" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Users"
+                       asp-route-keyword="@Model.Keyword" asp-route-role="@Model.Role" asp-route-status="@Model.Status" asp-route-page="@(Model.Page + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

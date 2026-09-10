@@ -1,0 +1,109 @@
+@model JobApplication
+@{
+    ViewData["Title"] = "Application Details";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications" class="active">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                <div>
+                    <p class="eyebrow mb-1">Application</p>
+                    <h1 class="mb-1">@Model.Job?.Title</h1>
+                    <p class="mb-0">@Model.Job?.Company?.Name · @Model.Job?.Location</p>
+                </div>
+                <partial name="_StatusBadge" model="(Model.Status.ToString(), AppStatusTone(Model.Status))" />
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="panel">
+                        <h4 class="panel__title">Cover letter</h4>
+                        @if (string.IsNullOrWhiteSpace(Model.CoverLetter))
+                        {
+                            <p class="text-muted mb-0">No cover letter provided.</p>
+                        }
+                        else
+                        {
+                            <p class="job-spec-text mb-0">@Model.CoverLetter</p>
+                        }
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Application history</h4>
+                        @if (!Model.Timeline.Any())
+                        {
+                            <p class="text-muted mb-0">No activity yet.</p>
+                        }
+                        else
+                        {
+                            <div class="timeline">
+                                @foreach (var entry in Model.Timeline.OrderByDescending(t => t.CreatedAt))
+                                {
+                                    <div class="timeline__item">
+                                        <div class="timeline__dot"></div>
+                                        <div class="timeline__body">
+                                            <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                <strong>@entry.Status.ToString()</strong>
+                                                <small class="text-muted">@entry.CreatedAt.ToString("MMM d, yyyy h:mm tt")</small>
+                                            </div>
+                                            <p class="mb-0">@entry.Note</p>
+                                            <small class="text-muted">by @entry.ChangedByName</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <h4 class="panel__title">Details</h4>
+                        <dl class="row mb-0">
+                            <dt class="col-5">Submitted</dt><dd class="col-7">@Model.CreatedAt.ToString("MMM d, yyyy")</dd>
+                            <dt class="col-5">Status</dt><dd class="col-7">@Model.Status</dd>
+                            @if (Model.ReviewedAt.HasValue)
+                            {
+                                <dt class="col-5">Reviewed</dt><dd class="col-7">@Model.ReviewedAt.Value.ToString("MMM d, yyyy")</dd>
+                            }
+                            <dt class="col-5">Resume</dt>
+                            <dd class="col-7">
+                                <a asp-controller="Applications" asp-action="DownloadMyResume">Download</a>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Actions</h4>
+                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.JobId" class="btn btn-ghost w-100 mb-2">View job posting</a>
+                        @if (Model.Status == ApplicationStatus.Applied || Model.Status == ApplicationStatus.UnderReview || Model.Status == ApplicationStatus.Interview)
+                        {
+                            <form asp-controller="Applications" asp-action="Withdraw" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Withdraw this application?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline w-100" style="color:#DC2626">Withdraw application</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@functions {
+    string AppStatusTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}

@@ -1,0 +1,12 @@
+@model (string Text, string Tone)
+@{
+    var tone = Model.Tone switch
+    {
+        "success" => "badge-soft badge-soft--success",
+        "warning" => "badge-soft badge-soft--warning",
+        "danger" => "badge-soft badge-soft--danger",
+        "info" => "badge-soft badge-soft--info",
+        _ => "badge-soft"
+    };
+}
+<span class="@tone">@Model.Text</span>

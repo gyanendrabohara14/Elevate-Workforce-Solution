@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: elevatehire-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: elevatehire
+      POSTGRES_USER: elevatehire
+      POSTGRES_PASSWORD: elevatehire
+    ports:
+      - "5435:5432"
+    volumes:
+      - elevatehire-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U elevatehire -d elevatehire"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: elevatehire-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  smtp4dev:
+    image: rnwood/smtp4dev:latest
+    container_name: elevatehire-smtp4dev
+    restart: unless-stopped
+    ports:
+      - "2525:25"
+      - "5000:80"
+
+volumes:
+  elevatehire-data:

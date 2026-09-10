@@ -1,0 +1,185 @@
+@model JobSeekerDashboardViewModel
+@{
+    ViewData["Title"] = "Job Seeker Dashboard";
+    var name = Model.Profile.User?.FullName ?? "Job Seeker";
+    var initials = name.Length > 0
+        ? string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(p => p[0])).ToUpperInvariant()
+        : "JS";
+    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <div class="dash-sidebar__user">
+            <div class="dash-sidebar__avatar">@initials</div>
+            <div>
+                <div class="dash-sidebar__name">@name</div>
+                <div class="dash-sidebar__role">@(Model.Profile.ProfessionalTitle ?? "Job Seeker")</div>
+            </div>
+        </div>
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard" class="active">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div class="company-lockup">
+                    <div class="company-lockup__logo">@initials</div>
+                    <div>
+                        <p class="eyebrow mb-1">Job seeker dashboard</p>
+                        <h1>@name</h1>
+                        <span class="text-muted" style="font-size:.9rem">@(Model.Profile.ProfessionalTitle ?? "Job Seeker")@(string.IsNullOrEmpty(Model.Profile.Location) ? "" : $" · {Model.Profile.Location}")</span>
+                    </div>
+                </div>
+                <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary">Browse jobs</a>
+            </div>
+        </div>
+
+        <div>
+            <div class="panel mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Profile completion</h5>
+                    <span class="badge-soft badge-soft--@(Model.ProfileCompletion >= 100 ? "success" : Model.ProfileCompletion >= 60 ? "info" : "warning")">@Model.ProfileCompletion%</span>
+                </div>
+                <div class="progress" style="height:.55rem">
+                    <div class="progress-bar" role="progressbar" style="width:@Model.ProfileCompletion%"></div>
+                </div>
+                @if (Model.ProfileCompletion < 100)
+                {
+                    <p class="text-muted mt-2 mb-0">Completing your profile boosts your chances of being shortlisted. <a asp-controller="JobSeeker" asp-action="Profile">Complete it now</a></p>
+                }
+                else
+                {
+                    <p class="text-muted mt-2 mb-0">Your profile is complete. Employers can see the full picture.</p>
+                }
+            </div>
+        </div>
+
+        <div class="metrics metrics--grid mb-4">
+            <div class="metric__item"><span class="metric__icon">📩</span><span class="metric__value">@Model.TotalApplications</span><span class="metric__label">Applications</span></div>
+            <div class="metric__item"><span class="metric__icon">⏳</span><span class="metric__value">@Model.UnderReview</span><span class="metric__label">Under review</span></div>
+            <div class="metric__item"><span class="metric__icon">⭐</span><span class="metric__value">@Model.Shortlisted</span><span class="metric__label">Shortlisted</span></div>
+            <div class="metric__item"><span class="metric__icon">📅</span><span class="metric__value">@Model.Interviews</span><span class="metric__label">Interviews</span></div>
+            <div class="metric__item"><span class="metric__icon">🔖</span><span class="metric__value">@Model.SavedJobs</span><span class="metric__label">Saved jobs</span></div>
+        </div>
+
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="panel__title mb-0">Recent applications</h4>
+                <a asp-controller="Applications" asp-action="MyApplications" class="btn btn-sm btn-ghost">View all</a>
+            </div>
+            @if (Model.RecentApplications.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Company</th>
+                                <th>Status</th>
+                                <th>Applied</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.RecentApplications)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Applications" asp-action="Details" asp-route-id="@app.Id"><strong>@app.Job?.Title</strong></a></td>
+                                    <td>@app.Job?.Company?.Name</td>
+                                    <td><partial name="_StatusBadge" model="(app.Status.ToString(), AppTone(app.Status))" /></td>
+                                    <td>@app.CreatedAt.ToString("MMM d")</td>
+                                    <td class="text-end"><a asp-controller="Applications" asp-action="Details" asp-route-id="@app.Id" class="btn btn-sm btn-ghost">Track</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">📩</div>
+                    <h4>No applications yet</h4>
+                    <p>Start by exploring roles that match your profile.</p>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary mt-2">Browse jobs</a>
+                </div>
+            }
+        </div>
+
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="panel__title mb-0">Recommended for you</h4>
+                <span class="text-muted small">Based on your profile</span>
+            </div>
+            @if (Model.RecommendedJobs.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var job in Model.RecommendedJobs)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id"><strong>@job.Title</strong></a></td>
+                                    <td>@job.Company?.Name</td>
+                                    <td>@job.Location</td>
+                                    <td class="text-end"><a asp-controller="Applications" asp-action="Apply" asp-route-id="@job.Id" class="btn btn-sm btn-primary">Apply</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">🎯</div>
+                    <h4>No recommendations yet</h4>
+                    <p>Complete your profile to get tailored recommendations.</p>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-sm btn-outline mt-2">Explore jobs</a>
+                </div>
+            }
+        </div>
+
+        <div class="panel">
+            <h4 class="panel__title">Recent notifications</h4>
+            @if (Model.Notifications.Any())
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var n in Model.Notifications)
+                    {
+                        <li class="d-flex justify-content-between align-items-start gap-3 py-2 border-bottom">
+                            <div>
+                                <strong>@n.Title</strong>
+                                <div class="text-muted">@n.Message</div>
+                            </div>
+                            <small class="text-muted" style="white-space:nowrap">@n.CreatedAt.ToString("MMM d")</small>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted mb-0">No notifications yet. Updates about your applications will appear here.</p>
+            }
+        </div>
+    </main>
+</div>

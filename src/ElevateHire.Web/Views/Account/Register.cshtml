@@ -1,0 +1,55 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Get started";
+}
+
+<div class="auth-wrap">
+    <div class="auth-card auth-card--wide">
+        <div class="auth-card__brand">
+            <span class="brand__mark">E</span>
+            <span class="brand__text">Elevate<span class="brand__accent">Hire</span></span>
+        </div>
+
+        <h1 class="auth-card__title">Get started</h1>
+        <p class="auth-card__lead">Join ElevateHire to find work or find talent in Nepal.</p>
+
+        <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Role" />
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label" for="FullName">Full name</label>
+                <input asp-for="FullName" id="FullName" class="form-control" autofocus placeholder="Your full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label" for="Email">Email address</label>
+                <input asp-for="Email" id="Email" class="form-control" autocomplete="email" placeholder="you@example.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label" for="Password">Password</label>
+                    <input asp-for="Password" id="Password" class="form-control" autocomplete="new-password" placeholder="Create a password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="ConfirmPassword" class="form-label" for="ConfirmPassword">Confirm password</label>
+                    <input asp-for="ConfirmPassword" id="ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Repeat your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-4 btn-lg">Create my account</button>
+        </form>
+
+        <div class="auth-card__footer text-center">
+            Already registered? <a asp-controller="Account" asp-action="Login"><strong>Log in</strong></a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

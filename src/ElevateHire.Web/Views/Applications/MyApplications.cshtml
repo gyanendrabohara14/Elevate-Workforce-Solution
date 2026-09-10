@@ -1,0 +1,97 @@
+@model ApplicationsDashboardListViewModel
+@{
+    ViewData["Title"] = "My Applications";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications" class="active">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="page-header">
+            <div class="container">
+                <h1>My Applications</h1>
+                <p>Track every opportunity you've applied for.</p>
+            </div>
+        </div>
+
+        <div class="container py-4">
+            @if (!Model.Applications.Any())
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">📄</div>
+                    <h4>No applications yet</h4>
+                    <p>Browse open roles and submit your first application.</p>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary mt-2">Find jobs</a>
+                </div>
+            }
+            else
+            {
+                <div class="panel">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Applied</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var app in Model.Applications)
+                                {
+                                    <tr>
+                                        <td><a asp-controller="Jobs" asp-action="Details" asp-route-id="@app.JobId"><strong>@app.Job?.Title</strong></a></td>
+                                        <td>@app.Job?.Company?.Name</td>
+                                        <td><partial name="_StatusBadge" model="(app.Status.ToString(), AppStatusTone(app.Status))" /></td>
+                                        <td>@app.CreatedAt.ToString("MMM d, yyyy")</td>
+                                        <td class="text-end">
+                                            <a asp-controller="Applications" asp-action="Details" asp-route-id="@app.Id" class="btn btn-sm btn-ghost">View</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-4" aria-label="Applications pages">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Applications" asp-action="MyApplications" asp-route-page="@(Model.Page - 1)">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-controller="Applications" asp-action="MyApplications" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Applications" asp-action="MyApplications" asp-route-page="@(Model.Page + 1)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </main>
+</div>
+
+@functions {
+    string AppStatusTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}

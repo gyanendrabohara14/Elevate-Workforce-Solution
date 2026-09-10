@@ -1,0 +1,127 @@
+@model EmployerApplicantsViewModel
+@{
+    ViewData["Title"] = "Applicants";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants" class="active">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="page-header">
+            <div class="container">
+                <h1>Applicants</h1>
+                <p>All applications to your job postings.</p>
+            </div>
+        </div>
+
+        <div class="container py-4">
+            <form method="get" class="panel mb-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="jobId">Job</label>
+                        <select id="jobId" name="jobId" class="form-select">
+                            <option value="">All jobs</option>
+                            @foreach (var job in Model.JobOptions)
+                            {
+                                <option value="@job.Id" selected="@(Model.FilterJobId == job.Id)">@job.Title</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="status">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All statuses</option>
+                            @foreach (var s in Enum.GetNames<ApplicationStatus>())
+                            {
+                                <option value="@s" selected="@(Model.Status == s)">@s</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </div>
+            </form>
+
+            @if (!Model.Applications.Any())
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">😕</div>
+                    <h4>No applications found</h4>
+                    <p>Applications from candidates will appear here.</p>
+                </div>
+            }
+            else
+            {
+                <div class="panel">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Candidate</th>
+                                    <th>Position</th>
+                                    <th>Status</th>
+                                    <th>Applied</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var app in Model.Applications)
+                                {
+                                    <tr>
+                                        <td>@app.JobSeeker?.User?.FullName</td>
+                                        <td>@app.Job?.Title</td>
+                                        <td><partial name="_StatusBadge" model="(app.Status.ToString(), AppTone(app.Status))" /></td>
+                                        <td>@app.CreatedAt.ToString("MMM d, yyyy")</td>
+                                        <td class="text-end">
+                                            <a asp-controller="Employer" asp-action="Applicant" asp-route-id="@app.Id" class="btn btn-sm btn-ghost">Review</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-4" aria-label="Applicants pages">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Employer" asp-action="Applicants"
+                                   asp-route-jobId="@Model.FilterJobId" asp-route-status="@Model.Status" asp-route-page="@(Model.Page - 1)">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-controller="Employer" asp-action="Applicants"
+                                       asp-route-jobId="@Model.FilterJobId" asp-route-status="@Model.Status" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-controller="Employer" asp-action="Applicants"
+                                   asp-route-jobId="@Model.FilterJobId" asp-route-status="@Model.Status" asp-route-page="@(Model.Page + 1)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </main>
+</div>
+
+@functions {
+    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}

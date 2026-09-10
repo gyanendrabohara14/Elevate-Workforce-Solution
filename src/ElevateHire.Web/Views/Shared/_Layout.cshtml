@@ -1,0 +1,130 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@{
+    var isAdmin = User.IsInRole("Admin");
+    var isEmployer = User.IsInRole("Employer");
+    var isJobSeeker = User.IsInRole("JobSeeker");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ElevateHire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <header class="site-header js-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand__mark">E</span>
+                    <span class="brand__text">Elevate<span class="brand__accent">Hire</span></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Jobs" asp-action="Index">Find Jobs</a></li>
+                        @if (isJobSeeker)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="JobSeeker" asp-action="Dashboard">My Dashboard</a></li>
+                        }
+                        @if (isEmployer)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Employer" asp-action="Dashboard">Employer Portal</a></li>
+                        }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Admin</a></li>
+                        }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex justify-content-lg-end">
+                                    <button type="submit" class="btn btn-outline">Sign out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="btn btn-ghost me-lg-2" asp-controller="Account" asp-action="Login">Log in</a></li>
+                            <li class="nav-item"><a class="btn btn-primary" asp-controller="Account" asp-action="GetStarted">Get Started</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    @if (TempData["success"] is not null)
+    {
+        <div class="flash flash--success">@TempData["success"]</div>
+    }
+    @if (TempData["error"] is not null)
+    {
+        <div class="flash flash--error">@TempData["error"]</div>
+    }
+
+    <main class="site-main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <a class="navbar-brand brand mb-3" asp-controller="Home" asp-action="Index">
+                        <span class="brand__mark">E</span>
+                        <span class="brand__text">Elevate<span class="brand__accent">Hire</span></span>
+                    </a>
+                    <p class="footer__text">
+                        Better Jobs. Better Matches. Better Careers. An AI-assisted recruitment platform for the Nepalese employment market.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <h6 class="footer__heading">Explore</h6>
+                    <ul class="footer__list">
+                        <li><a asp-controller="Jobs" asp-action="Index">Find Jobs</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <h6 class="footer__heading">For Employers</h6>
+                    <ul class="footer__list">
+                        <li><a asp-controller="Account" asp-action="Register">Post a Job</a></li>
+                        <li><a asp-controller="Employer" asp-action="Dashboard">Employer Portal</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h6 class="footer__heading">Address</h6>
+                    <ul class="footer__list">
+                        <li>Kathmandu, Nepal</li>
+                        <li>hello&#64;elevatehire.local</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                &copy; @DateTime.UtcNow.Year ElevateHire. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

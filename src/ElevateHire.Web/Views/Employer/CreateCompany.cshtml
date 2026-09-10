@@ -1,0 +1,74 @@
+@model CompanyFormViewModel
+@{
+    ViewData["Title"] = "Set up your company";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company" class="active">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <p class="eyebrow mb-1">Almost there</p>
+                <h1>Set up your company</h1>
+                <p>Create a company profile to start posting jobs. It must be verified first.</p>
+            </div>
+
+            <form asp-controller="Employer" asp-action="Company" method="post" enctype="multipart/form-data" class="panel" style="max-width:820px;margin:0 auto">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label">Company name</label>
+                        <input asp-for="Name" class="form-control" autofocus />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Industry" class="form-label">Industry</label>
+                        <input asp-for="Industry" class="form-control" placeholder="e.g. IT Services, Banking, E-commerce" />
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="5" placeholder="What does your company do?"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Website" class="form-label">Website</label>
+                        <input asp-for="Website" class="form-control" placeholder="https://" />
+                        <span asp-validation-for="Website" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Location" class="form-label">Head office location</label>
+                        <input asp-for="Location" class="form-control" placeholder="Kathmandu" />
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="ContactEmail" class="form-label">Contact email</label>
+                        <input asp-for="ContactEmail" class="form-control" />
+                        <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ContactPhone" class="form-label">Contact phone</label>
+                        <input asp-for="ContactPhone" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Logo" class="form-label">Logo (PNG, JPG, SVG, WEBP · max 2 MB)</label>
+                        <input asp-for="Logo" type="file" class="form-control" accept=".png,.jpg,.jpeg,.svg,.webp" />
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Create company profile</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

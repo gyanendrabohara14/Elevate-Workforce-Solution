@@ -1,0 +1,167 @@
+@model Job
+@{
+    ViewData["Title"] = $"{Model.Title} · Job Details";
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Jobs">Jobs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <h1 class="mb-1">@Model.Title</h1>
+                <p class="mb-0">@Model.Company?.Name · @Model.Location</p>
+            </div>
+            <partial name="_StatusBadge" model="(Model.StatusDisplay, JobTone(Model))" />
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="panel">
+                <h4 class="panel__title">Job details</h4>
+                <p class="job-spec-text">@Model.Description</p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Responsibilities))
+                {
+                    <h5 class="mt-4 mb-2">Responsibilities</h5>
+                    <ul class="spec-list">
+                        @foreach (var line in Model.Responsibilities.Split('\n', StringSplitOptions.RemoveEmptyEntries)) { <li>@line</li> }
+                    </ul>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Requirements))
+                {
+                    <h5 class="mt-4 mb-2">Requirements</h5>
+                    <ul class="spec-list">
+                        @foreach (var line in Model.Requirements.Split('\n', StringSplitOptions.RemoveEmptyEntries)) { <li>@line</li> }
+                    </ul>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Skills))
+                {
+                    <h5 class="mt-4 mb-2">Skills</h5>
+                    <div class="job-card__tags">
+                        @foreach (var skill in Model.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="tag">@skill.Trim()</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="panel">
+                <h4 class="panel__title">Applicants</h4>
+                @if (!Model.Applications.Any())
+                {
+                    <p class="text-muted mb-0">No applications yet.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead><tr><th>Candidate</th><th>Status</th><th>Applied</th><th></th></tr></thead>
+                            <tbody>
+                                @foreach (var app in Model.Applications)
+                                {
+                                    <tr>
+                                        <td>@app.JobSeeker?.User?.FullName</td>
+                                        <td><partial name="_StatusBadge" model="(app.Status.ToString(), AppTone(app.Status))" /></td>
+                                        <td>@app.CreatedAt.ToString("MMM d, yyyy")</td>
+                                        <td class="text-end"><span class="text-muted">—</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="panel">
+                <h4 class="panel__title">Summary</h4>
+                <dl class="row mb-0">
+                    <dt class="col-5">Category</dt><dd class="col-7">@Model.Category</dd>
+                    <dt class="col-5">Job type</dt><dd class="col-7">@Model.JobType</dd>
+                    <dt class="col-5">Experience</dt><dd class="col-7">@Model.ExperienceLevel</dd>
+                    @if (Model.MinSalary.HasValue)
+                    {
+                        <dt class="col-5">Salary</dt><dd class="col-7">NPR @Model.MinSalary.Value.ToString("N0")+</dd>
+                    }
+                    <dt class="col-5">Vacancies</dt><dd class="col-7">@Model.Vacancies</dd>
+                    <dt class="col-5">Posted</dt><dd class="col-7">@(Model.PublishedAt?.ToString("MMM d, yyyy") ?? "—")</dd>
+                    @if (Model.Deadline.HasValue)
+                    {
+                        <dt class="col-5">Deadline</dt><dd class="col-7">@Model.Deadline.Value.ToString("MMM d, yyyy")</dd>
+                    }
+                </dl>
+            </div>
+
+            <div class="panel">
+                <h4 class="panel__title">Actions</h4>
+                @if (Model.Status == JobStatus.PendingVerification)
+                {
+                    <p class="text-muted">Approve to publish this job, or reject it with feedback.</p>
+                    <form asp-controller="Admin" asp-action="ApproveJob" asp-route-id="@Model.Id" method="post" class="mb-2">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary w-100">Approve & publish</button>
+                    </form>
+                    <form asp-controller="Admin" asp-action="RejectJob" asp-route-id="@Model.Id" method="post"
+                          onsubmit="return confirm('Reject this job? The employer will be able to edit and resubmit.');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="note" value="Approved version requires changes. Please review and edit." />
+                        <button type="submit" class="btn btn-outline w-100" style="color:#DC2626">Reject</button>
+                    </form>
+                }
+                else if (Model.Status == JobStatus.Active)
+                {
+                    <p class="text-muted">This job is live and accepting applications.</p>
+                    <form asp-controller="Admin" asp-action="UnpublishJob" asp-route-id="@Model.Id" method="post" class="mb-2" onsubmit="return confirm('Unpublish this job?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline w-100">Unpublish</button>
+                    </form>
+                    <form asp-controller="Admin" asp-action="RemoveJob" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Remove this job?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-ghost w-100" style="color:#DC2626">Remove</button>
+                    </form>
+                }
+                else if (Model.Status == JobStatus.Rejected)
+                {
+                    <p class="text-muted">This job was rejected. Restore it to the review queue.</p>
+                    <form asp-controller="Admin" asp-action="RestoreJob" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary w-100">Restore (pending)</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">This job is not publicly visible.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string JobTone(ElevateHire.Domain.Entities.Job job)
+    {
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.Active && !job.IsExpired) return "success";
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.PendingVerification) return "warning";
+        return job.Status == ElevateHire.Domain.Enums.JobStatus.Rejected ? "danger" : "neutral";
+    }
+
+    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}

@@ -1,0 +1,13 @@
+﻿@model ElevateHire.Web.ViewModels.ErrorViewModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<div class="error-page">
+    <div class="error-page__inner">
+        <span class="error-page__code">@(Model?.StatusCode ?? 500)</span>
+        <h1>Something went wrong</h1>
+        <p>An unexpected error occurred while processing your request. Please try again. If the problem continues, contact support.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>

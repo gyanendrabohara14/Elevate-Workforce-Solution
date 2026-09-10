@@ -1,0 +1,160 @@
+@model JobApplication
+@{
+    ViewData["Title"] = "Candidate Application";
+    var student = Model.JobSeeker;
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants" class="active">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                <div>
+                    <p class="eyebrow mb-1">Application</p>
+                    <h1 class="mb-1">@student?.User?.FullName</h1>
+                    <p class="mb-0">@student?.ProfessionalTitle</p>
+                </div>
+                <partial name="_StatusBadge" model="(Model.Status.ToString(), AppTone(Model.Status))" />
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="panel">
+                        <h4 class="panel__title">Applied for</h4>
+                        <h5 class="mb-1">@Model.Job?.Title</h5>
+                        <p class="text-muted">@Model.Job?.Company?.Name · @Model.Job?.Location</p>
+                        <p class="mb-0">
+                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@Model.JobId" class="btn btn-sm btn-ghost">View job posting</a>
+                            <a asp-controller="Employer" asp-action="Insights" asp-route-id="@Model.Id" class="btn btn-sm btn-accent">AI candidate insights</a>
+                        </p>
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Cover letter</h4>
+                        @if (string.IsNullOrWhiteSpace(Model.CoverLetter))
+                        {
+                            <p class="text-muted mb-0">No cover letter provided.</p>
+                        }
+                        else
+                        {
+                            <p class="job-spec-text mb-0">@Model.CoverLetter</p>
+                        }
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">About the candidate</h4>
+                        <dl class="row mb-0">
+                            <dt class="col-3">Location</dt><dd class="col-9">@(student?.Location ?? "—")</dd>
+                            <dt class="col-3">Phone</dt><dd class="col-9">@(student?.Phone ?? "—")</dd>
+                            <dt class="col-3">Email</dt><dd class="col-9">@(student?.User?.Email ?? "—")</dd>
+                            <dt class="col-3">Experience</dt><dd class="col-9"><span class="job-spec-text">@(student?.Experience ?? "—")</span></dd>
+                            <dt class="col-3">Education</dt><dd class="col-9"><span class="job-spec-text">@(student?.Education ?? "—")</span></dd>
+                            <dt class="col-3">Skills</dt><dd class="col-9"><span class="job-spec-text">@(student?.Skills ?? "—")</span></dd>
+                            <dt class="col-3">Certifications</dt><dd class="col-9"><span class="job-spec-text">@(student?.Certifications ?? "—")</span></dd>
+                            <dt class="col-3">Languages</dt><dd class="col-9">@(student?.Languages ?? "—")</dd>
+                        </dl>
+                        @if (!string.IsNullOrWhiteSpace(student?.About))
+                        {
+                            <p class="job-spec-text mt-3 mb-0">@student.About</p>
+                        }
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Application history</h4>
+                        @if (!Model.Timeline.Any())
+                        {
+                            <p class="text-muted mb-0">No activity yet.</p>
+                        }
+                        else
+                        {
+                            <div class="timeline">
+                                @foreach (var entry in Model.Timeline.OrderByDescending(t => t.CreatedAt))
+                                {
+                                    <div class="timeline__item">
+                                        <div class="timeline__dot"></div>
+                                        <div class="timeline__body">
+                                            <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                <strong>@entry.Status.ToString()</strong>
+                                                <small class="text-muted">@entry.CreatedAt.ToString("MMM d, yyyy h:mm tt")</small>
+                                            </div>
+                                            <p class="mb-0">@entry.Note</p>
+                                            <small class="text-muted">by @entry.ChangedByName</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <h4 class="panel__title">Update status</h4>
+                        <form asp-controller="Employer" asp-action="UpdateApplicationStatus" asp-route-id="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="mb-2">
+                                <label class="form-label">Move to</label>
+                                <select name="status" class="form-select">
+                                    @foreach (var s in Enum.GetValues<ApplicationStatus>())
+                                    {
+                                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Note (optional)</label>
+                                <textarea name="note" class="form-control" rows="3" placeholder="Visible to the candidate in their timeline."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Update status</button>
+                        </form>
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Resume</h4>
+                        @if (student?.ResumeStoredName is not null)
+                        {
+                            <a asp-controller="Employer" asp-action="DownloadResume" asp-route-id="@Model.Id" class="btn btn-outline w-100">
+                                Download resume (@(FormatSize(student.ResumeSizeBytes)))
+                            </a>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">No resume uploaded.</p>
+                        }
+                    </div>
+
+                    <div class="panel">
+                        <h4 class="panel__title">Details</h4>
+                        <dl class="row mb-0">
+                            <dt class="col-5">Submitted</dt><dd class="col-7">@Model.CreatedAt.ToString("MMM d, yyyy")</dd>
+                            @if (Model.ReviewedAt.HasValue)
+                            {
+                                <dt class="col-5">Reviewed</dt><dd class="col-7">@Model.ReviewedAt.Value.ToString("MMM d, yyyy")</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@functions {
+    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+
+    string FormatSize(long? bytes) => bytes is null || bytes == 0 ? "—" :
+        bytes < 1024 * 1024 ? $"{bytes / 1024d:N0} KB" : $"{bytes / (1024d * 1024d):N1} MB";
+}

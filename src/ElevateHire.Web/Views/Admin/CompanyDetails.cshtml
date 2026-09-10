@@ -1,0 +1,115 @@
+@model Company
+@{
+    ViewData["Title"] = $"{Model.Name} · Company Details";
+    var jobs = ViewBag.Jobs as IEnumerable<Job> ?? Enumerable.Empty<Job>();
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <p class="eyebrow mb-1">Company details</p>
+                <h1 class="mb-1">@Model.Name</h1>
+                <p class="mb-0">@Model.Industry</p>
+            </div>
+            <partial name="_StatusBadge" model="(Model.StatusDisplay, CompanyTone(Model.Status))" />
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="panel">
+                <h4 class="panel__title">About</h4>
+                <p class="job-spec-text">@Model.Description</p>
+                <dl class="row mb-0">
+                    <dt class="col-3">Website</dt><dd class="col-9">@Model.Website</dd>
+                    <dt class="col-3">Location</dt><dd class="col-9">@Model.Location</dd>
+                    <dt class="col-3">Contact email</dt><dd class="col-9">@Model.ContactEmail</dd>
+                    <dt class="col-3">Contact phone</dt><dd class="col-9">@Model.ContactPhone</dd>
+                    <dt class="col-3">Registered</dt><dd class="col-9">@Model.CreatedAt.ToString("MMM d, yyyy")</dd>
+                </dl>
+            </div>
+
+            <div class="panel">
+                <h4 class="panel__title">Jobs posted (@jobs.Count())</h4>
+                @if (!jobs.Any())
+                {
+                    <p class="text-muted mb-0">This company hasn't posted any jobs.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr><th>Title</th><th>Status</th><th>Applications</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var job in jobs)
+                                {
+                                    <tr>
+                                        <td><a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id"><strong>@job.Title</strong></a></td>
+                                        <td><partial name="_StatusBadge" model="(job.StatusDisplay, JobTone(job))" /></td>
+                                        <td>@job.Applications.Count</td>
+                                        <td class="text-end"><a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id" class="btn btn-sm btn-ghost">Review</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="panel">
+                <h4 class="panel__title">Verification</h4>
+                @if (Model.Status == CompanyStatus.PendingVerification)
+                {
+                    <p class="text-muted">Approve this company to let them publish jobs publicly.</p>
+                    <div class="d-flex gap-2">
+                        <form asp-controller="Admin" asp-action="ApproveCompany" asp-route-id="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary">Approve company</button>
+                        </form>
+                        <form asp-controller="Admin" asp-action="RejectCompany" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Reject this company?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline" style="color:#DC2626">Reject</button>
+                        </form>
+                    </div>
+                }
+                else if (Model.Status == CompanyStatus.Rejected)
+                {
+                    <p class="text-muted">This company was rejected. Return it to the review queue to reconsider.</p>
+                    <form asp-controller="Admin" asp-action="ResumeCompany" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary">Back to pending</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">This company is approved and active.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        _ => "neutral"
+    };
+
+    string JobTone(ElevateHire.Domain.Entities.Job job)
+    {
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.Active && !job.IsExpired) return "success";
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.PendingVerification) return "warning";
+        return job.Status == ElevateHire.Domain.Enums.JobStatus.Rejected ? "danger" : "neutral";
+    }
+}

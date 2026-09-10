@@ -1,0 +1,147 @@
+@model JobDetailsViewModel
+@{
+    var job = Model.Job;
+    ViewData["Title"] = job.Title;
+}
+
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a asp-controller="Jobs" asp-action="Index">Jobs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@job.Title</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <h1>@job.Title</h1>
+                <p class="mb-1"><strong>@job.Company?.Name</strong> · @job.Location</p>
+                <div class="job-card__tags">
+                    <span class="tag">@job.JobType</span>
+                    <span class="tag">@job.ExperienceLevel</span>
+                    <span class="tag">@job.Category</span>
+                    @if (job.IsRemote) { <span class="tag tag--featured">Remote</span> }
+                    @if (job.IsHybrid) { <span class="tag tag--featured">Hybrid</span> }
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                @if (job.IsAcceptingApplications && User.IsInRole("JobSeeker") && !Model.HasApplied)
+                {
+                    <a asp-controller="Applications" asp-action="Apply" asp-route-id="@job.Id" class="btn btn-primary btn-lg">Apply Now</a>
+                }
+                else if (Model.HasApplied && User.IsInRole("JobSeeker"))
+                {
+                    <span class="btn btn-soft btn-lg disabled">Applied</span>
+                }
+                else if (job.IsAcceptingApplications)
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">Apply Now</a>
+                }
+                else
+                {
+                    <span class="btn btn-outline btn-lg disabled">Applications closed</span>
+                }
+                @if (User.IsInRole("JobSeeker"))
+                {
+                    <button type="button" class="btn btn-outline btn-lg @(Model.IsSaved ? "is-saved" : "")" data-save-job data-job-id="@job.Id" aria-pressed="@(Model.IsSaved ? "true" : "false")">
+                        <span class="js-save-label">@(Model.IsSaved ? "Saved" : "Save")</span>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <div class="panel mb-4">
+                <h4 class="panel__title">About this role</h4>
+                <p class="job-spec-text">@job.Description</p>
+
+                @if (!string.IsNullOrWhiteSpace(job.Responsibilities))
+                {
+                    <h5 class="mt-4 mb-2">Responsibilities</h5>
+                    <ul class="spec-list">
+                        @foreach (var line in job.Responsibilities.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <li>@line</li>
+                        }
+                    </ul>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(job.Requirements))
+                {
+                    <h5 class="mt-4 mb-2">Requirements</h5>
+                    <ul class="spec-list">
+                        @foreach (var line in job.Requirements.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <li>@line</li>
+                        }
+                    </ul>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(job.Qualifications))
+                {
+                    <h5 class="mt-4 mb-2">Qualifications</h5>
+                    <p class="job-spec-text">@job.Qualifications</p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(job.Skills))
+                {
+                    <h5 class="mt-4 mb-2">Key skills</h5>
+                    <div class="job-card__tags">
+                        @foreach (var skill in job.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="tag">@skill.Trim()</span>
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(job.Benefits))
+                {
+                    <h5 class="mt-4 mb-2">Benefits</h5>
+                    <p class="job-spec-text">@job.Benefits</p>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel">
+                <h4 class="panel__title">Job summary</h4>
+                <dl class="row mb-0">
+                    <dt class="col-5">Category</dt><dd class="col-7">@job.Category</dd>
+                    <dt class="col-5">Job type</dt><dd class="col-7">@job.JobType</dd>
+                    <dt class="col-5">Experience</dt><dd class="col-7">@job.ExperienceLevel</dd>
+                    @if (job.MinSalary.HasValue)
+                    {
+                        <dt class="col-5">Salary</dt>
+                        <dd class="col-7">NPR @job.MinSalary.Value.ToString("N0") - @(job.MaxSalary?.ToString("N0") ?? "Open")</dd>
+                    }
+                    <dt class="col-5">Vacancies</dt><dd class="col-7">@job.Vacancies</dd>
+                    <dt class="col-5">Posted</dt><dd class="col-7">@job.PublishedAt?.ToString("MMM d, yyyy")</dd>
+                    @if (job.Deadline.HasValue)
+                    {
+                        <dt class="col-5">Deadline</dt>
+                        <dd class="col-7">@job.Deadline.Value.ToString("MMM d, yyyy")</dd>
+                    }
+                </dl>
+            </div>
+            <div class="panel">
+                <h4 class="panel__title">About the company</h4>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="job-card__logo" style="width:52px;height:52px">@(job.Company?.Name?.Substring(0,1) ?? "C")</div>
+                    <div>
+                        <h5 class="mb-0">@job.Company?.Name</h5>
+                        <small>@job.Company?.Industry</small>
+                    </div>
+                </div>
+                <p>@job.Company?.Description</p>
+                <small class="text-muted">@job.Company?.Location</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/jobs.js" asp-append-version="true"></script>
+}

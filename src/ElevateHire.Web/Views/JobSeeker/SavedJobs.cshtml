@@ -1,0 +1,69 @@
+@model SavedJobsViewModel
+@{
+    ViewData["Title"] = "Saved Jobs";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs" class="active">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="mb-4">
+                <p class="eyebrow mb-1">Bookmarks</p>
+                <h1>Saved jobs</h1>
+                <p class="mb-0">Roles you've saved to review later.</p>
+            </div>
+
+            @if (!Model.Items.Any())
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">🔖</div>
+                    <h4>No saved jobs</h4>
+                    <p>Save jobs you like while browsing and come back to them any time.</p>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary mt-2">Browse jobs</a>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var job in Model.Items)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <partial name="~/Views/Jobs/_JobCard.cshtml" model="(job, true)" />
+                        </div>
+                    }
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-4" aria-label="Saved jobs pages">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                                <a class="page-link" asp-controller="JobSeeker" asp-action="SavedJobs" asp-route-page="@(Model.Page - 1)">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-controller="JobSeeker" asp-action="SavedJobs" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-controller="JobSeeker" asp-action="SavedJobs" asp-route-page="@(Model.Page + 1)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <script src="~/js/jobs.js" asp-append-version="true"></script>
+}

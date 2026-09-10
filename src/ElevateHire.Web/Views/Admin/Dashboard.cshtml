@@ -1,0 +1,124 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div class="company-lockup">
+            <div class="company-lockup__logo" style="background:var(--black);color:var(--light-purple)">A</div>
+            <div>
+                <p class="eyebrow mb-1">Platform overview</p>
+                <h1>Admin dashboard</h1>
+                <span class="text-muted" style="font-size:.9rem">Monitor activity and review what needs attention.</span>
+            </div>
+        </div>
+        @if (Model.PendingCompanies > 0 || Model.PendingJobs > 0)
+        {
+            <a asp-controller="Admin" asp-action="Companies" asp-route-status="PendingVerification" class="btn btn-primary">
+                Review pending @((Model.PendingCompanies + Model.PendingJobs) > 0 ? $"({(Model.PendingCompanies + Model.PendingJobs):N0})" : "") →
+            </a>
+        }
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="metrics metrics--grid mb-4">
+        <div class="metric__item"><span class="metric__icon">👥</span><span class="metric__value">@Model.TotalUsers</span><span class="metric__label">Total users</span></div>
+        <div class="metric__item"><span class="metric__icon">🧑‍💻</span><span class="metric__value">@Model.JobSeekers</span><span class="metric__label">Job seekers</span></div>
+        <div class="metric__item"><span class="metric__icon">🏢</span><span class="metric__value">@Model.Employers</span><span class="metric__label">Employers</span></div>
+        <div class="metric__item"><span class="metric__icon">🗂️</span><span class="metric__value">@Model.Companies</span><span class="metric__label">Companies</span></div>
+        <div class="metric__item"><span class="metric__icon">⏳</span><span class="metric__value">@Model.PendingCompanies</span><span class="metric__label">Pending companies</span></div>
+        <div class="metric__item"><span class="metric__icon">💼</span><span class="metric__value">@Model.TotalJobs</span><span class="metric__label">Total jobs</span></div>
+        <div class="metric__item"><span class="metric__icon">✅</span><span class="metric__value">@Model.ActiveJobs</span><span class="metric__label">Active jobs</span></div>
+        <div class="metric__item"><span class="metric__icon">⏳</span><span class="metric__value">@Model.PendingJobs</span><span class="metric__label">Pending jobs</span></div>
+        <div class="metric__item"><span class="metric__icon">📩</span><span class="metric__value">@Model.Applications</span><span class="metric__label">Applications</span></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="panel">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="panel__title mb-0">Pending job approval</h4>
+                    <a asp-controller="Admin" asp-action="Jobs" asp-route-status="PendingVerification" class="btn btn-sm btn-ghost">View all</a>
+                </div>
+                @if (!Model.PendingJobsList.Any())
+                {
+                    <p class="text-muted mb-0">No jobs awaiting approval.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr><th>Title</th><th>Company</th><th>Posted</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var job in Model.PendingJobsList)
+                                {
+                                    <tr>
+                                        <td><a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id"><strong>@job.Title</strong></a></td>
+                                        <td>@job.Company?.Name</td>
+                                        <td>@job.CreatedAt.ToString("MMM d")</td>
+                                        <td class="text-end"><a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id" class="btn btn-sm btn-ghost">Review</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="panel">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="panel__title mb-0">Recent companies</h4>
+                    <a asp-controller="Admin" asp-action="Companies" asp-route-status="PendingVerification" class="btn btn-sm btn-ghost">Review pending</a>
+                </div>
+                @if (!Model.RecentCompanies.Any())
+                {
+                    <p class="text-muted mb-0">No companies yet.</p>
+                }
+                else
+                {
+                    <ul class="list-unstyled mb-0">
+                        @foreach (var c in Model.RecentCompanies)
+                        {
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <a asp-controller="Admin" asp-action="CompanyDetails" asp-route-id="@c.Id"><strong>@c.Name</strong></a>
+                                <partial name="_StatusBadge" model="(c.StatusDisplay, CompanyTone(c.Status))" />
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="panel">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="panel__title mb-0">Recent users</h4>
+                    <a asp-controller="Admin" asp-action="Users" class="btn btn-sm btn-ghost">View all</a>
+                </div>
+                <ul class="list-unstyled mb-0">
+                    @foreach (var u in Model.RecentUsers)
+                    {
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <a asp-controller="Admin" asp-action="UserDetails" asp-route-id="@u.Id">@u.FullName</a>
+                            <small class="text-muted">@u.Role</small>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        _ => "neutral"
+    };
+}

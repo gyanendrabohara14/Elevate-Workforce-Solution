@@ -1,0 +1,19 @@
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Nav(string c, string a) => (controller == c && action == a) ? "admin-nav__link active" : "admin-nav__link";
+}
+<div class="admin-nav">
+    <div class="container d-flex flex-wrap align-items-center gap-3 py-3">
+        <span class="admin-nav__brand fw-semibold">ElevateHire Admin</span>
+        <nav class="d-flex flex-wrap gap-1">
+            <a asp-controller="Admin" asp-action="Dashboard" class="@Nav("Admin", "Dashboard")">Dashboard</a>
+            <a asp-controller="Admin" asp-action="Users" class="@Nav("Admin", "Users")">Users</a>
+            <a asp-controller="Admin" asp-action="Companies" class="@Nav("Admin", "Companies")">Companies</a>
+            <a asp-controller="Admin" asp-action="Jobs" class="@Nav("Admin", "Jobs")">Jobs</a>
+            <a asp-controller="Admin" asp-action="Applications" class="@Nav("Admin", "Applications")">Applications</a>
+            <a asp-controller="Admin" asp-action="Settings" class="@Nav("Admin", "Settings")">Settings</a>
+            <a asp-controller="Home" asp-action="Index" class="admin-nav__link">← Back to site</a>
+        </nav>
+    </div>
+</div>

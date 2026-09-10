@@ -1,0 +1,63 @@
+@model IEnumerable<Notification>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications" class="active">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="mb-4">
+                <p class="eyebrow mb-1">Inbox</p>
+                <h1>Notifications</h1>
+                <p class="mb-0">Updates about your applications.</p>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">🔔</div>
+                    <h4>No notifications</h4>
+                    <p>You'll be notified when employers update your applications.</p>
+                </div>
+            }
+            else
+            {
+                <div class="panel">
+                    <ul class="list-unstyled mb-0">
+                        @foreach (var n in Model)
+                        {
+                            <li class="py-3 border-bottom">
+                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                    <strong>@n.Title</strong>
+                                    <small class="text-muted">@n.CreatedAt.ToString("MMM d, yyyy h:mm tt")</small>
+                                </div>
+                                <div class="mt-1">@n.Message</div>
+                                @if (!string.IsNullOrWhiteSpace(n.Link))
+                                {
+                                    <a asp-controller="Applications" asp-action="Details" asp-route-id="@ParseId(n.Link)" class="btn btn-sm btn-ghost mt-2">View application</a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </main>
+</div>
+
+@functions {
+    int ParseId(string? link)
+    {
+        if (string.IsNullOrWhiteSpace(link)) return 0;
+        var last = link.Split('/').Last();
+        return int.TryParse(last, out var id) ? id : 0;
+    }
+}

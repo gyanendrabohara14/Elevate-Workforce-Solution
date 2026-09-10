@@ -1,0 +1,31 @@
+@model JobFormViewModel
+@{
+    ViewData["Title"] = "Edit Job";
+    ViewData["FormAction"] = "EditJob";
+    ViewData["SubmitText"] = "Save changes";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs" class="active">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="mb-4">
+                <p class="eyebrow mb-1">@Model.Title</p>
+                <h1>Edit job</h1>
+                <p class="mb-0">Edits to a rejected job will resubmit it for verification.</p>
+            </div>
+            <partial name="_JobForm" model="@Model" />
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

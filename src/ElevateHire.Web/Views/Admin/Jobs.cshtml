@@ -1,0 +1,101 @@
+@model AdminJobsViewModel
+@{
+    ViewData["Title"] = "Manage Jobs";
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <h1>Jobs</h1>
+        <p>Review, approve and manage all job postings.</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <form method="get" class="panel mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label" for="keyword">Search</label>
+                <input id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Title, company or location" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    @foreach (var s in Enum.GetNames<JobStatus>())
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Job title</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Applications</th>
+                        <th>Posted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var job in Model.Jobs)
+                    {
+                        <tr>
+                            <td><a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id"><strong>@job.Title</strong></a></td>
+                            <td>@job.Company?.Name</td>
+                            <td><partial name="_StatusBadge" model="(job.StatusDisplay, JobTone(job))" /></td>
+                            <td>@job.Applications.Count</td>
+                            <td>@job.CreatedAt.ToString("MMM d, yyyy")</td>
+                            <td class="text-end">
+                                <a asp-controller="Admin" asp-action="JobDetails" asp-route-id="@job.Id" class="btn btn-sm btn-ghost">Review</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Job pages">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Jobs"
+                       asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@(Model.Page - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" asp-controller="Admin" asp-action="Jobs"
+                           asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Jobs"
+                       asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@(Model.Page + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@functions {
+    string JobTone(ElevateHire.Domain.Entities.Job job)
+    {
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.Active && !job.IsExpired) return "success";
+        if (job.Status == ElevateHire.Domain.Enums.JobStatus.PendingVerification) return "warning";
+        return job.Status == ElevateHire.Domain.Enums.JobStatus.Rejected ? "danger" : "neutral";
+    }
+}

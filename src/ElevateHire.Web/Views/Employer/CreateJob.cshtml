@@ -1,0 +1,31 @@
+@model JobFormViewModel
+@{
+    ViewData["Title"] = "Post a Job";
+    ViewData["FormAction"] = "CreateJob";
+    ViewData["SubmitText"] = "Post job";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob" class="active">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="mb-4">
+                <p class="eyebrow mb-1">New listing</p>
+                <h1>Post a job</h1>
+                <p class="mb-0">An administrator will verify your job before it goes live.</p>
+            </div>
+            <partial name="_JobForm" model="@Model" />
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

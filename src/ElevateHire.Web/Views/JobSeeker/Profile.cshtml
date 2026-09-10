@@ -1,0 +1,102 @@
+@model JobSeekerProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Job Seeker</h4>
+        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="JobSeeker" asp-action="Profile" class="active">Profile</a>
+        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
+        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
+        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="mb-4">
+                <p class="eyebrow mb-1">Profile</p>
+                <h1>Your profile</h1>
+                <p class="mb-0">A complete profile helps employers find you.</p>
+            </div>
+
+            @if (ViewBag.FirstTime == true)
+            {
+                <div class="info-box mb-4">Welcome! Fill out your profile to get recommended jobs tailored to your skills.</div>
+            }
+
+            <form asp-controller="JobSeeker" asp-action="Profile" method="post" enctype="multipart/form-data" class="panel">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="FullName" class="form-label">Full name</label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ProfessionalTitle" class="form-label">Professional title</label>
+                        <input asp-for="ProfessionalTitle" class="form-control" placeholder="e.g. Software Engineer" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Location" class="form-label">Location</label>
+                        <input asp-for="Location" class="form-control" placeholder="Kathmandu" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" class="form-control" placeholder="+977-98..." />
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="About" class="form-label">About</label>
+                        <textarea asp-for="About" class="form-control" rows="4" placeholder="Write a short summary of who you are and what you're looking for."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Skills" class="form-label">Skills <small class="text-muted">(comma separated)</small></label>
+                        <input asp-for="Skills" class="form-control" placeholder="C#, .NET, React, SQL, Communication" />
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Education" class="form-label">Education</label>
+                        <textarea asp-for="Education" class="form-control" rows="3" placeholder="Degree, institution, year"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Experience" class="form-label">Experience</label>
+                        <textarea asp-for="Experience" class="form-control" rows="3" placeholder="Roles you've held and what you did"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Certifications" class="form-label">Certifications</label>
+                        <input asp-for="Certifications" class="form-control" placeholder="AWS Certified, CCNA, ..." />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Languages" class="form-label">Languages</label>
+                        <input asp-for="Languages" class="form-control" placeholder="Nepali, English, ..." />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Resume" class="form-label">Resume (PDF, DOC, DOCX · max 5 MB)</label>
+                        <input asp-for="Resume" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Save profile</button>
+                    <a asp-controller="JobSeeker" asp-action="Dashboard" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+
+            <div class="panel mt-3">
+                <h4 class="panel__title">Resume</h4>
+                <p class="text-muted mb-3">You can download or remove your current resume if you have one on file.</p>
+                <div class="d-flex gap-2">
+                    <a asp-controller="JobSeeker" asp-action="DownloadResume" class="btn btn-outline">Download resume</a>
+                    <form asp-controller="JobSeeker" asp-action="RemoveResume" method="post" onsubmit="return confirm('Remove your resume?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-ghost" style="color:#DC2626">Remove resume</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

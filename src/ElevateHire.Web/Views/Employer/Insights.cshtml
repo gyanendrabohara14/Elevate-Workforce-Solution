@@ -1,0 +1,112 @@
+@using ElevateHire.Application.AI
+@model ResumeMatchingResponse
+@{
+    var app = ViewBag.Application as JobApplication;
+    ViewData["Title"] = "AI Candidate Insights";
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants" class="active">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                <div>
+                    <p class="eyebrow mb-1">AI matching</p>
+                    <h1 class="mb-1">Candidate insights</h1>
+                    <p class="mb-0">@app?.JobSeeker?.User?.FullName · @app?.Job?.Title</p>
+                </div>
+                <a asp-controller="Employer" asp-action="Applicant" asp-route-id="@app?.Id" class="btn btn-outline">Back to application</a>
+            </div>
+
+            @if (!Model.Success)
+            {
+                <div class="panel">
+                    <h4 class="panel__title">AI unavailable</h4>
+                    <p class="mb-0">@Model.Error</p>
+                </div>
+            }
+            else
+            {
+                <div class="panel mb-4">
+                    <h4 class="panel__title">Match score</h4>
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        <div class="match-pill @(Model.MatchScore >= 70 ? "match-pill--high" : Model.MatchScore >= 40 ? "match-pill--mid" : "")" style="--match: @Model.MatchScore%">
+                            <span class="sr-only">@Model.MatchScore%</span>
+                            <div class="match-pill__value">@Model.MatchScore%</div>
+                            <div class="progress" style="width:200px">
+                                <div class="progress-bar" role="progressbar" style="width:@Model.MatchScore%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="mb-1"><strong>Recommendation:</strong> @Model.Recommendation</p>
+                            <p class="mb-0 text-muted">@Model.Explanation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="panel">
+                            <h4 class="panel__title">Relevant experience</h4>
+                            <p class="job-spec-text mb-0">@Model.RelevantExperience</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel">
+                            <h4 class="panel__title">Strengths</h4>
+                            @if (Model.Strengths.Any())
+                            {
+                                <ul class="spec-list">
+                                    @foreach (var s in Model.Strengths) { <li>@s</li> }
+                                </ul>
+                            }
+                            else { <p class="text-muted mb-0">No strengths identified.</p> }
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel">
+                            <h4 class="panel__title">Potential gaps</h4>
+                            @if (Model.PotentialGaps.Any())
+                            {
+                                <ul class="spec-list">
+                                    @foreach (var g in Model.PotentialGaps) { <li>@g</li> }
+                                </ul>
+                            }
+                            else { <p class="text-muted mb-0">No gaps identified.</p> }
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel">
+                            <h4 class="panel__title">Skill match</h4>
+                            <div class="mb-2">
+                                <span class="badge-soft badge-soft--success">Matching skills</span>
+                                <div class="job-card__tags mt-2">
+                                    @foreach (var s in Model.MatchingSkills)
+                                    {
+                                        <span class="tag tag--featured">@s</span>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <span class="badge-soft badge-soft--danger">Missing skills</span>
+                                <div class="job-card__tags mt-2">
+                                    @foreach (var s in Model.MissingSkills)
+                                    {
+                                        <span class="tag">@s</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </main>
+</div>

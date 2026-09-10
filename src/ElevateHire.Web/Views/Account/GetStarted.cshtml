@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Get started";
+}
+
+<div class="auth-wrap">
+    <div class="auth-card auth-card--wide">
+        <div class="auth-card__brand">
+            <span class="brand__mark">E</span>
+            <span class="brand__text">Elevate<span class="brand__accent">Hire</span></span>
+        </div>
+
+        <div class="text-center mb-4">
+            <h1 class="auth-card__title">Welcome to ElevateHire</h1>
+            <p class="auth-card__lead mb-0">Tell us who you are, and we'll set up the right experience for you.</p>
+        </div>
+
+        <div class="path-choices">
+            <div class="path-card">
+                <div class="path-card__icon">🧑‍💻</div>
+                <div>
+                    <h3 class="path-card__title">I'm looking for a job</h3>
+                    <p class="path-card__desc">Search roles, build your profile and apply to opportunities across Nepal.</p>
+                </div>
+                <a asp-controller="Account" asp-action="Register" asp-route-role="JobSeeker" class="path-card__cta">Create my profile →</a>
+                <a asp-controller="Account" asp-action="Login" asp-route-role="JobSeeker" class="path-card__link">Have an account? Log in as a job seeker</a>
+            </div>
+            <div class="path-card">
+                <div class="path-card__icon">🏢</div>
+                <div>
+                    <h3 class="path-card__title">I'm hiring</h3>
+                    <p class="path-card__desc">Verify your company, post jobs and manage candidates from one dashboard.</p>
+                </div>
+                <a asp-controller="Account" asp-action="Register" asp-route-role="Employer" class="path-card__cta">Post your first job →</a>
+                <a asp-controller="Account" asp-action="Login" asp-route-role="Employer" class="path-card__link">Have an account? Log in as an employer</a>
+            </div>
+        </div>
+
+        <p class="text-center text-muted mb-0 mt-3" style="font-size:.9rem">
+            Managing the platform? <a asp-controller="Account" asp-action="Login" asp-route-role="Admin"><strong>Log in as an administrator</strong></a>
+        </p>
+    </div>
+</div>

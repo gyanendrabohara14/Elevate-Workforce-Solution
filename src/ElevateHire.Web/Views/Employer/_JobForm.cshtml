@@ -1,0 +1,114 @@
+@model JobFormViewModel
+@{
+    var action = ViewData["FormAction"]?.ToString() ?? "CreateJob";
+    var submitText = ViewData["SubmitText"]?.ToString() ?? "Post job";
+}
+
+<form asp-controller="Employer" asp-action="@action" method="post" class="panel">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    @if ((ViewData["CompanyStatus"] as CompanyStatus?) == CompanyStatus.PendingVerification)
+    {
+        <div class="info-box mb-4">Your company is awaiting verification. Your job will be submitted for approval once verified.</div>
+    }
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label asp-for="Title" class="form-label">Job title</label>
+            <input asp-for="Title" class="form-control" placeholder="e.g. Senior .NET Developer" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Category" class="form-label">Category</label>
+            <select asp-for="Category" class="form-select">
+                @foreach (var c in Enum.GetValues<JobCategory>())
+                {
+                    <option value="@c" selected="@(Model.Category == c)">@c</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="JobType" class="form-label">Employment type</label>
+            <select asp-for="JobType" class="form-select">
+                @foreach (var t in Enum.GetValues<JobType>())
+                {
+                    <option value="@t" selected="@(Model.JobType == t)">@t</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="ExperienceLevel" class="form-label">Experience level</label>
+            <select asp-for="ExperienceLevel" class="form-select">
+                @foreach (var e in Enum.GetValues<ExperienceLevel>())
+                {
+                    <option value="@e" selected="@(Model.ExperienceLevel == e)">@e</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Location" class="form-label">Location</label>
+            <input asp-for="Location" class="form-control" placeholder="Kathmandu / Remote" />
+        </div>
+        <div class="col-md-4">
+            <div class="form-check">
+                <input asp-for="IsRemote" class="form-check-input" />
+                <label asp-for="IsRemote" class="form-check-label">Remote friendly</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-check">
+                <input asp-for="IsHybrid" class="form-check-input" />
+                <label asp-for="IsHybrid" class="form-check-label">Hybrid</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Vacancies" class="form-label">Vacancies</label>
+            <input asp-for="Vacancies" type="number" class="form-control" min="1" max="500" />
+            <span asp-validation-for="Vacancies" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="MinSalary" class="form-label">Min monthly salary (NPR)</label>
+            <input asp-for="MinSalary" type="number" class="form-control" />
+            <span asp-validation-for="MinSalary" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="MaxSalary" class="form-label">Max monthly salary (NPR)</label>
+            <input asp-for="MaxSalary" type="number" class="form-control" />
+            <span asp-validation-for="MaxSalary" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Deadline" class="form-label">Application deadline</label>
+            <input asp-for="Deadline" type="date" class="form-control" />
+        </div>
+        <div class="col-12">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="6" placeholder="Describe the role and what the team does..."></textarea>
+        </div>
+        <div class="col-12">
+            <label asp-for="Responsibilities" class="form-label">Responsibilities <small class="text-muted">(one per line)</small></label>
+            <textarea asp-for="Responsibilities" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="col-12">
+            <label asp-for="Requirements" class="form-label">Requirements <small class="text-muted">(one per line)</small></label>
+            <textarea asp-for="Requirements" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="col-12">
+            <label asp-for="Qualifications" class="form-label">Qualifications</label>
+            <textarea asp-for="Qualifications" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-12">
+            <label asp-for="Skills" class="form-label">Skills <small class="text-muted">(comma separated)</small></label>
+            <input asp-for="Skills" class="form-control" placeholder="C#, ASP.NET, PostgreSQL, React" />
+        </div>
+        <div class="col-12">
+            <label asp-for="Benefits" class="form-label">Benefits</label>
+            <textarea asp-for="Benefits" class="form-control" rows="3" placeholder="Paid leave, remote allowance, health insurance..."></textarea>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">@submitText</button>
+        <a asp-controller="Employer" asp-action="Jobs" class="btn btn-outline">Cancel</a>
+    </div>
+</form>

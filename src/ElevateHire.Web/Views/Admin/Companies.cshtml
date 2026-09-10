@@ -1,0 +1,100 @@
+@model CompanyListViewModel
+@{
+    ViewData["Title"] = "Manage Companies";
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <h1>Companies</h1>
+        <p>Review and verify employer companies.</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <form method="get" class="panel mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label" for="keyword">Search</label>
+                <input id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Name, industry or location" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    @foreach (var s in Enum.GetNames<CompanyStatus>())
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Industry</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Registered</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Companies)
+                    {
+                        <tr>
+                            <td><a asp-controller="Admin" asp-action="CompanyDetails" asp-route-id="@c.Id"><strong>@c.Name</strong></a></td>
+                            <td>@(c.Industry ?? "—")</td>
+                            <td>@(c.Location ?? "—")</td>
+                            <td><partial name="_StatusBadge" model="(c.StatusDisplay, CompanyTone(c.Status))" /></td>
+                            <td>@c.CreatedAt.ToString("MMM d, yyyy")</td>
+                            <td class="text-end"><a asp-controller="Admin" asp-action="CompanyDetails" asp-route-id="@c.Id" class="btn btn-sm btn-ghost">Review</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Company pages">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Companies"
+                       asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@(Model.Page - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" asp-controller="Admin" asp-action="Companies"
+                           asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Admin" asp-action="Companies"
+                       asp-route-keyword="@Model.Keyword" asp-route-status="@Model.Status" asp-route-page="@(Model.Page + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@functions {
+    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        _ => "neutral"
+    };
+}

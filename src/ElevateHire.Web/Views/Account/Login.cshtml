@@ -1,0 +1,60 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-card__brand">
+            <span class="brand__mark">E</span>
+            <span class="brand__text">Elevate<span class="brand__accent">Hire</span></span>
+        </div>
+
+        <h1 class="auth-card__title">Welcome back</h1>
+        <p class="auth-card__lead">Log in to continue your search or hiring.</p>
+
+        <div class="login-roles" role="tablist" aria-label="Account type">
+            <button type="button" class="login-role @(Model.Role != "Employer" && Model.Role != "Admin" ? "active" : "")" data-role="JobSeeker">Job Seeker</button>
+            <button type="button" class="login-role @(Model.Role == "Employer" ? "active" : "")" data-role="Employer">Employer</button>
+            <button type="button" class="login-role @(Model.Role == "Admin" ? "active" : "")" data-role="Admin">Administrator</button>
+        </div>
+        <p class="login-roles__hint">Select the account type you registered with.</p>
+
+        <form asp-controller="Account" asp-action="Login" method="post" id="loginForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Role" />
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label" for="Email">Email address</label>
+                <div class="input-group">
+                    <span class="input-group-text">@@</span>
+                    <input asp-for="Email" id="Email" class="form-control" autocomplete="email" autofocus placeholder="you@company.com" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label" for="Password">Password</label>
+                <input asp-for="Password" id="Password" class="form-control" autocomplete="current-password" placeholder="••••••••" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="form-check mb-0">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">Log in</button>
+        </form>
+
+        <div class="auth-card__footer text-center">
+            New to ElevateHire? <a asp-controller="Account" asp-action="GetStarted"><strong>Get started</strong></a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

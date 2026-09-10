@@ -1,0 +1,196 @@
+@model EmployerDashboardViewModel
+@{
+    ViewData["Title"] = "Employer Dashboard";
+    var company = Model.Company;
+    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus s) => s switch
+    {
+        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        _ => "neutral"
+    };
+    string JobTone(ElevateHire.Domain.Entities.Job j) => j.Status switch
+    {
+        ElevateHire.Domain.Enums.JobStatus.Active => "success",
+        ElevateHire.Domain.Enums.JobStatus.PendingVerification => "warning",
+        ElevateHire.Domain.Enums.JobStatus.Rejected => "danger",
+        _ => "neutral"
+    };
+}
+
+<div class="dash-shell">
+    <aside class="dash-sidebar">
+        <div class="dash-sidebar__user">
+            <div class="dash-sidebar__avatar">@(company.Name?.Length > 0 ? company.Name.Substring(0, 1) : "E")</div>
+            <div>
+                <div class="dash-sidebar__name">@company.Name</div>
+                <div class="dash-sidebar__role">@company.Industry</div>
+            </div>
+        </div>
+        <h4 class="dash-sidebar__title">Employer</h4>
+        <a asp-controller="Employer" asp-action="Dashboard" class="active">Dashboard</a>
+        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
+        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
+        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
+        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
+    </aside>
+    <main class="dash-main">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div class="company-lockup">
+                    <div class="company-lockup__logo">@(company.Name?.Length > 0 ? company.Name.Substring(0, 1) : "E")</div>
+                    <div>
+                        <p class="eyebrow mb-1">Employer dashboard</p>
+                        <h1>@company.Name</h1>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            @if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.Active)
+                            {
+                                <span class="verified-ribbon">✓ Verified company</span>
+                            }
+                            else
+                            {
+                                <span class="badge-soft badge-soft--@CompanyTone(company.Status)">@company.StatusDisplay</span>
+                            }
+                            <span class="text-muted" style="font-size:.9rem">@company.Location</span>
+                        </div>
+                    </div>
+                </div>
+                <a asp-controller="Employer" asp-action="CreateJob" class="btn btn-primary">Post a job</a>
+            </div>
+        </div>
+
+        <div>
+            @if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.PendingVerification)
+            {
+                <div class="alert-banner alert-banner--warning">
+                    <div class="alert-banner__icon">⏳</div>
+                    <div>
+                        <div class="alert-banner__title">Your company is awaiting verification</div>
+                        <p>An administrator will review and verify your company profile. Jobs you post will go live as soon as it's approved. Check back shortly.</p>
+                    </div>
+                </div>
+            }
+            else if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.Rejected)
+            {
+                <div class="alert-banner alert-banner--danger">
+                    <div class="alert-banner__icon">✕</div>
+                    <div>
+                        <div class="alert-banner__title">Company profile not approved</div>
+                        <p>Update your company details and resubmit for review.</p>
+                        <a asp-controller="Employer" asp-action="Company" class="btn btn-outline btn-sm mt-1">Edit company profile</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="metrics metrics--grid mb-4">
+            <div class="metric__item"><span class="metric__icon">💼</span><span class="metric__value">@Model.ActiveJobs</span><span class="metric__label">Active jobs</span></div>
+            <div class="metric__item"><span class="metric__icon">⏳</span><span class="metric__value">@Model.PendingJobs</span><span class="metric__label">Pending approval</span></div>
+            <div class="metric__item"><span class="metric__icon">📩</span><span class="metric__value">@Model.TotalApplications</span><span class="metric__label">Applications</span></div>
+            <div class="metric__item"><span class="metric__icon">⭐</span><span class="metric__value">@Model.Shortlisted</span><span class="metric__label">Shortlisted</span></div>
+            <div class="metric__item"><span class="metric__icon">📅</span><span class="metric__value">@Model.Interviews</span><span class="metric__label">Interviews</span></div>
+        </div>
+
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="panel__title mb-0">Your latest jobs</h4>
+                <a asp-controller="Employer" asp-action="Jobs" class="btn btn-sm btn-ghost">Manage all jobs</a>
+            </div>
+            @if (Model.Jobs.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>Status</th>
+                                <th>Applicants</th>
+                                <th>Posted</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var job in Model.Jobs)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Employer" asp-action="EditJob" asp-route-id="@job.Id"><strong>@job.Title</strong></a></td>
+                                    <td><partial name="_StatusBadge" model="(job.StatusDisplay, JobTone(job))" /></td>
+                                    <td>@job.Applications.Count</td>
+                                    <td>@job.CreatedAt.ToString("MMM d")</td>
+                                    <td class="text-end">
+                                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-ghost">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state__icon">💼</div>
+                    <h4>No jobs posted yet</h4>
+                    <p>Post your first job — it goes live instantly from your verified company.</p>
+                    <a asp-controller="Employer" asp-action="CreateJob" class="btn btn-primary mt-2">Post a job</a>
+                </div>
+            }
+        </div>
+
+        @if (!Model.RecentApplications.Any())
+        {
+            <div class="panel">
+                <h4 class="panel__title">Recent applications</h4>
+                <div class="empty-state">
+                    <div class="empty-state__icon">📩</div>
+                    <h4>No applications yet</h4>
+                    <p>Once candidates apply, they'll show up here in real time.</p>
+                    <a asp-controller="Employer" asp-action="CreateJob" class="btn btn-outline mt-2">Post a job</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel">
+                <h4 class="panel__title">Recent applications</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th>Applied</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.RecentApplications)
+                            {
+                                <tr>
+                                    <td>@app.JobSeeker?.User?.FullName</td>
+                                    <td>@app.Job?.Title</td>
+                                    <td><partial name="_StatusBadge" model="(app.Status.ToString(), AppTone(app.Status))" /></td>
+                                    <td>@app.CreatedAt.ToString("MMM d")</td>
+                                    <td class="text-end">
+                                        <a asp-controller="Employer" asp-action="Applicant" asp-route-id="@app.Id" class="btn btn-sm btn-ghost">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </main>
+</div>
+
+@functions {
+    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    {
+        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        _ => "warning"
+    };
+}

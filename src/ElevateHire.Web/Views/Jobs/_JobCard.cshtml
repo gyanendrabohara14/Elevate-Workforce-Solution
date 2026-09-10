@@ -1,0 +1,33 @@
+@model (ElevateHire.Domain.Entities.Job Job, bool IsSaved)
+@{
+    var job = Model.Job;
+    var saved = Model.IsSaved;
+}
+<div class="job-card">
+    <div class="job-card__company">
+        <div class="job-card__logo">@(job.Company?.Name?.Substring(0, 1) ?? "J")</div>
+        <span class="job-card__company-name">@job.Company?.Name</span>
+    </div>
+    <h3 class="job-card__title"><a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">@job.Title</a></h3>
+    <div class="job-card__tags">
+        <span class="tag">@job.Location</span>
+        <span class="tag">@job.JobType</span>
+        <span class="tag">@job.ExperienceLevel</span>
+        @if (job.MinSalary.HasValue)
+        {
+            <span class="tag">NPR @job.MinSalary.Value.ToString("N0")+</span>
+        }
+    </div>
+    <div class="job-card__footer">
+        <span class="tag">Posted @job.PublishedAt?.ToString("MMM d")</span>
+        <div class="d-flex gap-2">
+            @if (User.IsInRole("JobSeeker"))
+            {
+                <button type="button" class="btn btn-sm btn-ghost @(saved ? "is-saved" : "")" data-save-job data-job-id="@job.Id" aria-pressed="@(saved ? "true" : "false")">
+                    <span class="js-save-label">@(saved ? "Saved" : "Save")</span>
+                </button>
+            }
+            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline">View</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+@model User
+@{
+    ViewData["Title"] = $"{Model.FullName} · User Details";
+    var profile = Model.Role == UserRole.JobSeeker ? Model.JobSeeker : null;
+    var company = Model.Employer?.Company;
+}
+
+<partial name="_AdminNav" />
+
+<div class="page-header">
+    <div class="container">
+        <p class="eyebrow mb-1">User details</p>
+        <h1>@Model.FullName</h1>
+        <p>@Model.Email</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="panel">
+                <h4 class="panel__title">Account</h4>
+                <dl class="row mb-0">
+                    <dt class="col-4">Role</dt><dd class="col-8">@Model.Role</dd>
+                    <dt class="col-4">Status</dt><dd class="col-8">@(Model.IsActive ? "Active" : "Disabled")</dd>
+                    <dt class="col-4">Email</dt><dd class="col-8">@Model.Email</dd>
+                    <dt class="col-4">Joined</dt><dd class="col-8">@Model.CreatedAt.ToString("MMM d, yyyy")</dd>
+                    @if (Model.LastLoginAt.HasValue)
+                    {
+                        <dt class="col-4">Last login</dt><dd class="col-8">@Model.LastLoginAt.Value.ToString("MMM d, yyyy h:mm tt")</dd>
+                    }
+                </dl>
+                @if (Model.Role != UserRole.Admin)
+                {
+                    <form asp-controller="Admin" asp-action="ToggleUser" asp-route-id="@Model.Id" method="post" class="mt-3">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline">@(Model.IsActive ? "Disable account" : "Enable account")</button>
+                    </form>
+                }
+            </div>
+        </div>
+
+        @if (profile is not null)
+        {
+            <div class="col-lg-6">
+                <div class="panel">
+                    <h4 class="panel__title">Job seeker profile</h4>
+                    <dl class="row mb-0">
+                        <dt class="col-4">Title</dt><dd class="col-8">@(profile.ProfessionalTitle ?? "—")</dd>
+                        <dt class="col-4">Location</dt><dd class="col-8">@(profile.Location ?? "—")</dd>
+                        <dt class="col-4">Phone</dt><dd class="col-8">@(profile.Phone ?? "—")</dd>
+                        <dt class="col-4">Skills</dt><dd class="col-8"><span class="job-spec-text">@(profile.Skills ?? "—")</span></dd>
+                        <dt class="col-4">Resume</dt><dd class="col-8">@(profile.ResumeStoredName is null ? "Not uploaded" : "Uploaded")</dd>
+                        <dt class="col-4">Completion</dt><dd class="col-8">@profile.ProfileCompletionPercent()%</dd>
+                    </dl>
+                </div>
+            </div>
+        }
+
+        @if (company is not null)
+        {
+            <div class="col-lg-6">
+                <div class="panel">
+                    <h4 class="panel__title">Company</h4>
+                    <dl class="row mb-0">
+                        <dt class="col-4">Name</dt><dd class="col-8"><a asp-controller="Admin" asp-action="CompanyDetails" asp-route-id="@company.Id">@company.Name</a></dd>
+                        <dt class="col-4">Industry</dt><dd class="col-8">@(company.Industry ?? "—")</dd>
+                        <dt class="col-4">Location</dt><dd class="col-8">@(company.Location ?? "—")</dd>
+                        <dt class="col-4">Status</dt><dd class="col-8">@company.StatusDisplay</dd>
+                    </dl>
+                </div>
+            </div>
+        }
+    </div>
+</div>
