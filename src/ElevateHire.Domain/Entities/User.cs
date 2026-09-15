@@ -1,7 +1,7 @@
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace ElevateHire.Domain.Entities;
+namespace ElevateWorkforce.Domain.Entities;
 
 public class User : IdentityUser<int>
 {

@@ -1,22 +1,22 @@
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Web.ViewModels;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ElevateHire.Web.Controllers;
+namespace ElevateWorkforce.Web.Controllers;
 
 public class AccountController : Controller
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly ElevateHire.Application.Interfaces.IUserService _userService;
+    private readonly ElevateWorkforce.Application.Interfaces.IUserService _userService;
     private readonly ILogger<AccountController> _logger;
 
     public AccountController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
-        ElevateHire.Application.Interfaces.IUserService userService,
+        ElevateWorkforce.Application.Interfaces.IUserService userService,
         ILogger<AccountController> logger)
     {
         _userManager = userManager;

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ElevateHire.Application.DTOs;
+namespace ElevateWorkforce.Application.DTOs;
 
 public sealed class RegisterUserDto
 {

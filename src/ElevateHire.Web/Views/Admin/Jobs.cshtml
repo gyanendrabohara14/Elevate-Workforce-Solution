@@ -92,10 +92,10 @@
 </div>
 
 @functions {
-    string JobTone(ElevateHire.Domain.Entities.Job job)
+    string JobTone(ElevateWorkforce.Domain.Entities.Job job)
     {
-        if (job.Status == ElevateHire.Domain.Enums.JobStatus.Active && !job.IsExpired) return "success";
-        if (job.Status == ElevateHire.Domain.Enums.JobStatus.PendingVerification) return "warning";
-        return job.Status == ElevateHire.Domain.Enums.JobStatus.Rejected ? "danger" : "neutral";
+        if (job.Status == ElevateWorkforce.Domain.Enums.JobStatus.Active && !job.IsExpired) return "success";
+        if (job.Status == ElevateWorkforce.Domain.Enums.JobStatus.PendingVerification) return "warning";
+        return job.Status == ElevateWorkforce.Domain.Enums.JobStatus.Rejected ? "danger" : "neutral";
     }
 }

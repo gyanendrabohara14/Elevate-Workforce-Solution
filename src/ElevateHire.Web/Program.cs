@@ -1,9 +1,9 @@
-using ElevateHire.Application;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Infrastructure;
-using ElevateHire.Infrastructure.Data;
-using ElevateHire.Web;
-using ElevateHire.Web.Services;
+using ElevateWorkforce.Application;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Infrastructure;
+using ElevateWorkforce.Infrastructure.Data;
+using ElevateWorkforce.Web;
+using ElevateWorkforce.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +59,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     {
         options.LoginPath = "/account/login";
         options.AccessDeniedPath = "/account/accessdenied";
-        options.Cookie.Name = "ElevateHire.Auth";
+        options.Cookie.Name = "ElevateWorkforce.Auth";
         options.SlidingExpiration = true;
     });
 

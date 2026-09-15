@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\ElevateHire.Domain\ElevateHire.Domain.csproj" />
-    <ProjectReference Include="..\ElevateHire.Application\ElevateHire.Application.csproj" />
-    <ProjectReference Include="..\ElevateHire.Infrastructure\ElevateHire.Infrastructure.csproj" />
+    <ProjectReference Include="..\ElevateHire.Domain\ElevateWorkforce.Domain.csproj" />
+    <ProjectReference Include="..\ElevateHire.Application\ElevateWorkforce.Application.csproj" />
+    <ProjectReference Include="..\ElevateHire.Infrastructure\ElevateWorkforce.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +22,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>elevatehire-local-development</UserSecretsId>
+    <UserSecretsId>elevateworkforce-local-development</UserSecretsId>
   </PropertyGroup>
 
 </Project>

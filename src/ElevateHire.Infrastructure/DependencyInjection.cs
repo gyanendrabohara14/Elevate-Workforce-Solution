@@ -1,16 +1,16 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Application.Services;
-using ElevateHire.Infrastructure.AI;
-using ElevateHire.Infrastructure.Caching;
-using ElevateHire.Infrastructure.Data;
-using ElevateHire.Infrastructure.Email;
-using ElevateHire.Infrastructure.Repositories;
-using ElevateHire.Infrastructure.Storage;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Application.Services;
+using ElevateWorkforce.Infrastructure.AI;
+using ElevateWorkforce.Infrastructure.Caching;
+using ElevateWorkforce.Infrastructure.Data;
+using ElevateWorkforce.Infrastructure.Email;
+using ElevateWorkforce.Infrastructure.Repositories;
+using ElevateWorkforce.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ElevateHire.Infrastructure;
+namespace ElevateWorkforce.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -18,7 +18,7 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? configuration["ConnectionStrings__DefaultConnection"]
-            ?? "Host=localhost;Port=5432;Database=elevatehire;Username=elevatehire;Password=elevatehire";
+            ?? "Host=localhost;Port=5432;Database=elevateworkforce;Username=elevateworkforce;Password=elevateworkforce";
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString, npgsql =>

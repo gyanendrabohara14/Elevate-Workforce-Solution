@@ -1,9 +1,9 @@
-using ElevateHire.Application.Services;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.Services;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Application.Interfaces;
 using Moq;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public class UserServiceTests
 {

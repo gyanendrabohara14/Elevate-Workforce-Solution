@@ -1,6 +1,6 @@
-using ElevateHire.Domain.Common;
+using ElevateWorkforce.Domain.Common;
 
-namespace ElevateHire.Domain.Entities;
+namespace ElevateWorkforce.Domain.Entities;
 
 public class Employer : BaseEntity
 {

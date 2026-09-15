@@ -1,8 +1,8 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Application.Services;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ElevateHire.Application;
+namespace ElevateWorkforce.Application;
 
 public static class DependencyInjection
 {

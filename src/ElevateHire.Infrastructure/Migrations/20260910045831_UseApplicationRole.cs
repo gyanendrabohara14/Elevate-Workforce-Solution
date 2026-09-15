@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ElevateHire.Infrastructure.Migrations
+namespace ElevateWorkforce.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class UseApplicationRole : Migration

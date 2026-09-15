@@ -1,9 +1,9 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElevateHire.Application.Services;
+namespace ElevateWorkforce.Application.Services;
 
 public class ApplicationService : IApplicationService
 {

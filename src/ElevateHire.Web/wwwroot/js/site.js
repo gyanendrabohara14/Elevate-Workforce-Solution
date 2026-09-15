@@ -1,4 +1,4 @@
-﻿// ElevateHire — site interactions & motion
+// ElevateWorkforce — site interactions & motion
 
 (function () {
     "use strict";

@@ -1,9 +1,9 @@
-using ElevateHire.Domain.Entities;
+using ElevateWorkforce.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElevateHire.Infrastructure.Data;
+namespace ElevateWorkforce.Infrastructure.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User, ApplicationRole, int>
 {

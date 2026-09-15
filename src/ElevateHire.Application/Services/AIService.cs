@@ -1,7 +1,7 @@
-using ElevateHire.Application.AI;
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.AI;
+using ElevateWorkforce.Application.Interfaces;
 
-namespace ElevateHire.Application.Services;
+namespace ElevateWorkforce.Application.Services;
 
 /// <summary>
 /// Facade over the AI provider that guarantees the application never crashes

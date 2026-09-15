@@ -1,4 +1,4 @@
-namespace ElevateHire.Domain.Common;
+namespace ElevateWorkforce.Domain.Common;
 
 public abstract class BaseEntity
 {

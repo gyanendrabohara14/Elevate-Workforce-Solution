@@ -1,6 +1,6 @@
-using ElevateHire.Application.AI;
+using ElevateWorkforce.Application.AI;
 
-namespace ElevateHire.Application.Interfaces;
+namespace ElevateWorkforce.Application.Interfaces;
 
 public interface IAIService
 {

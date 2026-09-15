@@ -1,11 +1,11 @@
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace ElevateHire.Infrastructure.Email;
+namespace ElevateWorkforce.Infrastructure.Email;
 
 public sealed class EmailService : IEmailService
 {
@@ -29,10 +29,10 @@ public sealed class EmailService : IEmailService
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
         message.To.Add(new MailboxAddress(recipientName, recipientEmail));
-        message.Subject = "Welcome to ElevateHire";
+        message.Subject = "Welcome to ElevateWorkforce";
         message.Body = new TextPart("plain")
         {
-            Text = $"Hello {recipientName},\n\nYour ElevateHire account has been created successfully."
+            Text = $"Hello {recipientName},\n\nYour ElevateWorkforce account has been created successfully."
         };
 
         using var client = new SmtpClient();

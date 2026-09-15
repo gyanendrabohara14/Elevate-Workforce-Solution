@@ -1,17 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ElevateHire.Application.DTOs;
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Web.Services;
+using ElevateWorkforce.Application.DTOs;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ElevateHire.Web.Controllers;
+namespace ElevateWorkforce.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

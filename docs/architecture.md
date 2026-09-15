@@ -1,27 +1,27 @@
 # Architecture
 
-ElevateHire is a **modular monolith** with a clean, dependency-inverted layer structure.
+ElevateWorkforce is a **modular monolith** with a clean, dependency-inverted layer structure.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                       ElevateHire.Web (MVC)                  │
+│                       ElevateWorkforce.Web (MVC)                  │
 │  Controllers · ViewModels · Views · wwwroot · SeedData       │
 └───────────────┬──────────────────────────────────────────────┘
                 │ depends on
 ┌───────────────▼──────────────────────────────────────────────┐
-│                    ElevateHire.Application                    │
+│                    ElevateWorkforce.Application                    │
 │  Services (JobService, ApplicationService, UserService,      │
 │  CompanyService, AIService) · DTOs · repo interfaces         │
 └───────────────┬──────────────────────────────────────────────┘
                 │ depends on
 ┌───────────────▼──────────────────────────────────────────────┐
-│                    ElevateHire.Infrastructure                │
+│                    ElevateWorkforce.Infrastructure                │
 │  ApplicationDbContext · EF configurations · repositories     │
 │  FileStorageService · GeminiService                          │
 └───────────────┬──────────────────────────────────────────────┘
                 │ depends on
 ┌───────────────▼──────────────────────────────────────────────┐
-│                       ElevateHire.Domain                     │
+│                       ElevateWorkforce.Domain                     │
 │  Entities (Job, JobApplication, Company, User...) · Enums    │
 │  Business rules (IsExpired, ProfileCompletionPercent)        │
 └──────────────────────────────────────────────────────────────┘
@@ -76,10 +76,10 @@ starting the whole host. Migrations live under
 
 ## Tests
 
-- **Unit** (`ElevateHire.UnitTests`) — domain rules, `JobService`, `ApplicationService`,
+- **Unit** (`ElevateWorkforce.UnitTests`) — domain rules, `JobService`, `ApplicationService`,
   `FileStorageService`. Uses an in-memory `IAsyncQueryProvider` helper to exercise EF-style
   async LINQ without a database.
-- **Integration** (`ElevateHire.IntegrationTests`) — WebApplicationFactory tests against a
+- **Integration** (`ElevateWorkforce.IntegrationTests`) — WebApplicationFactory tests against a
   real PostgreSQL instance asserting page rendering, seed data, and role-based redirects.
 
 Run integration tests only with the database container up:

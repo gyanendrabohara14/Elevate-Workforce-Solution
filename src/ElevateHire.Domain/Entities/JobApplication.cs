@@ -1,7 +1,7 @@
-using ElevateHire.Domain.Common;
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Common;
+using ElevateWorkforce.Domain.Enums;
 
-namespace ElevateHire.Domain.Entities;
+namespace ElevateWorkforce.Domain.Entities;
 
 public class JobApplication : BaseEntity
 {

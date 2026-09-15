@@ -1,7 +1,7 @@
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public class DomainEntityTests
 {

@@ -1,8 +1,8 @@
-using ElevateHire.Web;
+using ElevateWorkforce.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace ElevateHire.IntegrationTests;
+namespace ElevateWorkforce.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {

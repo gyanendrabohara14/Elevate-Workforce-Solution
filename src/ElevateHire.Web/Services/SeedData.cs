@@ -1,15 +1,15 @@
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Infrastructure.Data;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElevateHire.Web.Services;
+namespace ElevateWorkforce.Web.Services;
 
 public static class SeedData
 {
     private const string DemoCompanyName = "Elevate Workforce Solutions";
-    private const string LegacyDemoCompanyName = "ElevateHire Corp";
+    private const string LegacyDemoCompanyName = "ElevateWorkforce Corp";
 
     public static async Task InitializeAsync(IServiceProvider services)
     {
@@ -38,17 +38,17 @@ public static class SeedData
     {
         if (await context.JobSeekers.AnyAsync()) return;
 
-        var admin = await EnsureUserAsync(userManager, "admin@elevatehire.local", "Aarav Sharma", "Admin", "Admin@123");
+        var admin = await EnsureUserAsync(userManager, "admin@elevateworkforce.local", "Aarav Sharma", "Admin", "Admin@123");
         admin.Role = UserRole.Admin;
         await EnsureRoleMembershipAsync(userManager, admin, "Admin");
         await userManager.UpdateAsync(admin);
 
-        var employer = await EnsureUserAsync(userManager, "employer@elevatehire.local", "Priya Adhikari", "Employer", "Employer@123");
+        var employer = await EnsureUserAsync(userManager, "employer@elevateworkforce.local", "Priya Adhikari", "Employer", "Employer@123");
         employer.Role = UserRole.Employer;
         await EnsureRoleMembershipAsync(userManager, employer, "Employer");
         await userManager.UpdateAsync(employer);
 
-        var jobSeeker = await EnsureUserAsync(userManager, "jobseeker@elevatehire.local", "Suman Karki", "JobSeeker", "Jobseeker@123");
+        var jobSeeker = await EnsureUserAsync(userManager, "jobseeker@elevateworkforce.local", "Suman Karki", "JobSeeker", "Jobseeker@123");
         jobSeeker.Role = UserRole.JobSeeker;
         await EnsureRoleMembershipAsync(userManager, jobSeeker, "JobSeeker");
         await userManager.UpdateAsync(jobSeeker);
@@ -397,7 +397,7 @@ public static class SeedData
         var jobs = await context.Jobs.Where(j => j.Status == JobStatus.Active).ToListAsync();
         var rng = new Random(7);
 
-        var seeker = jobSeekers.FirstOrDefault(s => s.User?.Email == "jobseeker@elevatehire.local");
+        var seeker = jobSeekers.FirstOrDefault(s => s.User?.Email == "jobseeker@elevateworkforce.local");
         if (seeker is not null && jobs.Any())
         {
             var targetJobs = jobs.Take(4).ToList();

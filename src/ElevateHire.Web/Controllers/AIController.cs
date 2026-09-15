@@ -1,11 +1,11 @@
-using ElevateHire.Application.AI;
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Infrastructure.Storage;
+using ElevateWorkforce.Application.AI;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ElevateHire.Web.Controllers;
+namespace ElevateWorkforce.Web.Controllers;
 
 public class AIController : Controller
 {

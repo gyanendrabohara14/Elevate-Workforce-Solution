@@ -1,4 +1,4 @@
-// ElevateHire — job discovery interactions (filters, save toggling)
+// ElevateWorkforce — job discovery interactions (filters, save toggling)
 (function () {
     "use strict";
 

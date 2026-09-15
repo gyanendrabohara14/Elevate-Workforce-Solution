@@ -1,4 +1,4 @@
-namespace ElevateHire.Infrastructure.Email;
+namespace ElevateWorkforce.Infrastructure.Email;
 
 public sealed class EmailSettings
 {
@@ -7,6 +7,6 @@ public sealed class EmailSettings
     public string UserName { get; init; } = string.Empty;
     public string Password { get; init; } = string.Empty;
     public string FromEmail { get; init; } = string.Empty;
-    public string FromName { get; init; } = "ElevateHire";
+    public string FromName { get; init; } = "ElevateWorkforce";
     public bool UseSsl { get; init; }
 }

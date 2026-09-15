@@ -114,11 +114,11 @@
 </div>
 
 @functions {
-    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus status) => status switch
+    string CompanyTone(ElevateWorkforce.Domain.Enums.CompanyStatus status) => status switch
     {
-        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
-        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
-        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Rejected => "danger",
         _ => "neutral"
     };
 }

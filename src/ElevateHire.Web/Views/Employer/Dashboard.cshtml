@@ -2,18 +2,18 @@
 @{
     ViewData["Title"] = "Employer Dashboard";
     var company = Model.Company;
-    string CompanyTone(ElevateHire.Domain.Enums.CompanyStatus s) => s switch
+    string CompanyTone(ElevateWorkforce.Domain.Enums.CompanyStatus s) => s switch
     {
-        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
-        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
-        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Rejected => "danger",
         _ => "neutral"
     };
-    string JobTone(ElevateHire.Domain.Entities.Job j) => j.Status switch
+    string JobTone(ElevateWorkforce.Domain.Entities.Job j) => j.Status switch
     {
-        ElevateHire.Domain.Enums.JobStatus.Active => "success",
-        ElevateHire.Domain.Enums.JobStatus.PendingVerification => "warning",
-        ElevateHire.Domain.Enums.JobStatus.Rejected => "danger",
+        ElevateWorkforce.Domain.Enums.JobStatus.Active => "success",
+        ElevateWorkforce.Domain.Enums.JobStatus.PendingVerification => "warning",
+        ElevateWorkforce.Domain.Enums.JobStatus.Rejected => "danger",
         _ => "neutral"
     };
 }
@@ -43,7 +43,7 @@
                         <p class="eyebrow mb-1">Employer dashboard</p>
                         <h1>@company.Name</h1>
                         <div class="d-flex align-items-center gap-2 flex-wrap">
-                            @if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.Active)
+                            @if (company.Status == ElevateWorkforce.Domain.Enums.CompanyStatus.Active)
                             {
                                 <span class="verified-ribbon">✓ Verified company</span>
                             }
@@ -60,7 +60,7 @@
         </div>
 
         <div>
-            @if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.PendingVerification)
+            @if (company.Status == ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification)
             {
                 <div class="alert-banner alert-banner--warning">
                     <div class="alert-banner__icon">⏳</div>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             }
-            else if (company.Status == ElevateHire.Domain.Enums.CompanyStatus.Rejected)
+            else if (company.Status == ElevateWorkforce.Domain.Enums.CompanyStatus.Rejected)
             {
                 <div class="alert-banner alert-banner--danger">
                     <div class="alert-banner__icon">✕</div>
@@ -186,11 +186,11 @@
 </div>
 
 @functions {
-    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    string AppTone(ElevateWorkforce.Domain.Enums.ApplicationStatus status) => status switch
     {
-        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
-        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
-        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Interview or ElevateWorkforce.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Rejected or ElevateWorkforce.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
         _ => "warning"
     };
 }

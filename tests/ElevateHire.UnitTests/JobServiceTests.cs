@@ -1,10 +1,10 @@
-using ElevateHire.Application.Services;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.Services;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Application.Interfaces;
 using Moq;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public class JobServiceTests
 {

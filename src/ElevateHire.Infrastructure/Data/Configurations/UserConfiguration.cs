@@ -1,8 +1,8 @@
-using ElevateHire.Domain.Entities;
+using ElevateWorkforce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ElevateHire.Infrastructure.Data.Configurations;
+namespace ElevateWorkforce.Infrastructure.Data.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

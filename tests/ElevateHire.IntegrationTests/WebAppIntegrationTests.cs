@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace ElevateHire.IntegrationTests;
+namespace ElevateWorkforce.IntegrationTests;
 
 public class WebAppIntegrationTests : IClassFixture<CustomWebApplicationFactory>
 {
@@ -20,7 +20,7 @@ public class WebAppIntegrationTests : IClassFixture<CustomWebApplicationFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var html = await response.Content.ReadAsStringAsync();
-        Assert.Contains("ElevateHire", html);
+        Assert.Contains("ElevateWorkforce", html);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class WebAppIntegrationTests : IClassFixture<CustomWebApplicationFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var html = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Welcome to ElevateHire", html);
+        Assert.Contains("Welcome to ElevateWorkforce", html);
         Assert.Contains("looking for a job", html);
         Assert.Contains("I'm hiring", html);
         Assert.Contains("Log in as an administrator", html);

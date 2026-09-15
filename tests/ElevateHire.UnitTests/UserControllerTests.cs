@@ -1,15 +1,15 @@
-using ElevateHire.Application.DTOs;
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Web.Controllers;
-using ElevateHire.Web.Services;
+using ElevateWorkforce.Application.DTOs;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Web.Controllers;
+using ElevateWorkforce.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public class UserControllerTests
 {
@@ -80,9 +80,9 @@ public class UserControllerTests
             email ?? new Mock<IEmailService>().Object,
             Options.Create(new JwtOptions
             {
-                Key = "elevatehire-test-key-with-at-least-32-chars",
-                Issuer = "ElevateHire",
-                Audience = "ElevateHire.Api"
+                Key = "elevateworkforce-test-key-with-at-least-32-chars",
+                Issuer = "ElevateWorkforce",
+                Audience = "ElevateWorkforce.Api"
             }),
             NullLogger<UserController>.Instance);
 

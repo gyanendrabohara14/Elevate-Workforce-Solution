@@ -1,4 +1,4 @@
-namespace ElevateHire.Application.AI;
+namespace ElevateWorkforce.Application.AI;
 
 public class JobDescriptionResponse
 {

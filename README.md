@@ -1,4 +1,4 @@
-# ElevateHire
+# ElevateWorkforce
 
 An **AI-assisted job recruitment platform built for Nepal**. ASP.NET Core MVC plus a Web API, PostgreSQL, Identity, JWT, Redis, SMTP, and Gemini API.
 
@@ -45,16 +45,16 @@ Employers post jobs, job seekers build profiles and apply, and administrators mo
 ## Project layout
 
 ```
-ElevateHire.slnx
+ElevateWorkforce.slnx
 docker/docker-compose.yml      # PostgreSQL container
 src/
-  ElevateHire.Domain           # Entities, enums, business rules
-  ElevateHire.Application      # Services, DTOs, interfaces
-  ElevateHire.Infrastructure   # EF Core, repositories, storage, Redis, email, Gemini
-  ElevateHire.Web              # MVC/API controllers, views, wwwroot
+  ElevateWorkforce.Domain           # Entities, enums, business rules
+  ElevateWorkforce.Application      # Services, DTOs, interfaces
+  ElevateWorkforce.Infrastructure   # EF Core, repositories, storage, Redis, email, Gemini
+  ElevateWorkforce.Web              # MVC/API controllers, views, wwwroot
 tests/
-  ElevateHire.UnitTests        # unit tests (services, domain, storage, API registration)
-  ElevateHire.IntegrationTests # 6 tests through a real web server + DB
+  ElevateWorkforce.UnitTests        # unit tests (services, domain, storage, API registration)
+  ElevateWorkforce.IntegrationTests # 6 tests through a real web server + DB
 ```
 
 ## Prerequisites
@@ -106,9 +106,9 @@ The app seeds realistic demo data (users, companies, jobs, applications) on firs
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | `admin@elevatehire.local` | `Admin@123` |
-| Employer | `employer@elevatehire.local` | `Employer@123` |
-| Job seeker | `jobseeker@elevatehire.local` | `Jobseeker@123` |
+| Admin | `admin@elevateworkforce.local` | `Admin@123` |
+| Employer | `employer@elevateworkforce.local` | `Employer@123` |
+| Job seeker | `jobseeker@elevateworkforce.local` | `Jobseeker@123` |
 
 ## Configuration
 

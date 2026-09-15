@@ -1,6 +1,6 @@
-using ElevateHire.Domain.Entities;
+using ElevateWorkforce.Domain.Entities;
 
-namespace ElevateHire.Web.ViewModels;
+namespace ElevateWorkforce.Web.ViewModels;
 
 public class ErrorViewModel
 {

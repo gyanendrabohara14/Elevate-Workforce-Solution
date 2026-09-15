@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public static class TestQueryableExtensions
 {

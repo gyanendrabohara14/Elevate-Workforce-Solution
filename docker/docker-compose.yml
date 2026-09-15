@@ -1,36 +1,36 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: elevatehire-db
+    container_name: elevateworkforce-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: elevatehire
-      POSTGRES_USER: elevatehire
-      POSTGRES_PASSWORD: elevatehire
+      POSTGRES_DB: elevateworkforce
+      POSTGRES_USER: elevateworkforce
+      POSTGRES_PASSWORD: elevateworkforce
     ports:
       - "5435:5432"
     volumes:
-      - elevatehire-data:/var/lib/postgresql/data
+      - elevateworkforce-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U elevatehire -d elevatehire"]
+      test: ["CMD-SHELL", "pg_isready -U elevateworkforce -d elevateworkforce"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: elevatehire-redis
+    container_name: elevateworkforce-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
 
   smtp4dev:
     image: rnwood/smtp4dev:latest
-    container_name: elevatehire-smtp4dev
+    container_name: elevateworkforce-smtp4dev
     restart: unless-stopped
     ports:
       - "2525:25"
       - "5000:80"
 
 volumes:
-  elevatehire-data:
+  elevateworkforce-data:

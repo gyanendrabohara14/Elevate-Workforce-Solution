@@ -1,4 +1,4 @@
-namespace ElevateHire.Application.Interfaces;
+namespace ElevateWorkforce.Application.Interfaces;
 
 public interface IEmailService
 {

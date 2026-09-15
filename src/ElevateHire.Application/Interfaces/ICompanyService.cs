@@ -1,7 +1,7 @@
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
 
-namespace ElevateHire.Application.Interfaces;
+namespace ElevateWorkforce.Application.Interfaces;
 
 public interface ICompanyService
 {

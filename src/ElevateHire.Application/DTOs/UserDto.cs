@@ -1,6 +1,6 @@
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Enums;
 
-namespace ElevateHire.Application.DTOs;
+namespace ElevateWorkforce.Application.DTOs;
 
 public class UserDto
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace ElevateHire.Domain.Entities;
+namespace ElevateWorkforce.Domain.Entities;
 
 public class ApplicationRole : IdentityRole<int>
 {

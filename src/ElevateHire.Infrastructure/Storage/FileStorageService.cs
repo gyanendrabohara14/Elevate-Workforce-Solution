@@ -1,6 +1,6 @@
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.Interfaces;
 
-namespace ElevateHire.Infrastructure.Storage;
+namespace ElevateWorkforce.Infrastructure.Storage;
 
 public interface IFileStorageService
 {

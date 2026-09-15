@@ -1,12 +1,12 @@
 @model CompanyFormViewModel
 @{
     ViewData["Title"] = "Company Profile";
-    var status = ViewBag.CompanyStatus as ElevateHire.Domain.Enums.CompanyStatus? ?? ElevateHire.Domain.Enums.CompanyStatus.PendingVerification;
-    string Tone(ElevateHire.Domain.Enums.CompanyStatus s) => s switch
+    var status = ViewBag.CompanyStatus as ElevateWorkforce.Domain.Enums.CompanyStatus? ?? ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification;
+    string Tone(ElevateWorkforce.Domain.Enums.CompanyStatus s) => s switch
     {
-        ElevateHire.Domain.Enums.CompanyStatus.Active => "success",
-        ElevateHire.Domain.Enums.CompanyStatus.PendingVerification => "warning",
-        ElevateHire.Domain.Enums.CompanyStatus.Rejected => "danger",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Active => "success",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification => "warning",
+        ElevateWorkforce.Domain.Enums.CompanyStatus.Rejected => "danger",
         _ => "neutral"
     };
 }
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        @if (status == ElevateHire.Domain.Enums.CompanyStatus.PendingVerification)
+        @if (status == ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification)
         {
             <div class="alert-banner alert-banner--warning">
                 <div class="alert-banner__icon">⏳</div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         }
-        else if (status == ElevateHire.Domain.Enums.CompanyStatus.Rejected)
+        else if (status == ElevateWorkforce.Domain.Enums.CompanyStatus.Rejected)
         {
             <div class="alert-banner alert-banner--danger">
                 <div class="alert-banner__icon">✕</div>

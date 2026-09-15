@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ElevateHire.Web.ViewModels;
+namespace ElevateWorkforce.Web.ViewModels;
 
 public class RegisterViewModel
 {

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ElevateHire.Application/ElevateWorkforce.Application.csproj" />
+    <Project Path="src/ElevateHire.Domain/ElevateWorkforce.Domain.csproj" />
+    <Project Path="src/ElevateHire.Infrastructure/ElevateWorkforce.Infrastructure.csproj" />
+    <Project Path="src/ElevateHire.Web/ElevateWorkforce.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ElevateHire.IntegrationTests/ElevateWorkforce.IntegrationTests.csproj" />
+    <Project Path="tests/ElevateHire.UnitTests/ElevateWorkforce.UnitTests.csproj" />
+  </Folder>
+</Solution>

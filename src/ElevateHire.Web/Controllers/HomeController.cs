@@ -1,10 +1,10 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Web.ViewModels;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElevateHire.Web.Controllers;
+namespace ElevateWorkforce.Web.Controllers;
 
 public class HomeController : Controller
 {

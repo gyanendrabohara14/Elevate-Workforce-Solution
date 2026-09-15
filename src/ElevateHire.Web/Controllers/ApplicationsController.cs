@@ -1,12 +1,12 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
-using ElevateHire.Domain.Enums;
-using ElevateHire.Infrastructure.Storage;
-using ElevateHire.Web.ViewModels;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
+using ElevateWorkforce.Domain.Enums;
+using ElevateWorkforce.Infrastructure.Storage;
+using ElevateWorkforce.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ElevateHire.Web.Controllers;
+namespace ElevateWorkforce.Web.Controllers;
 
 [Authorize(Roles = "JobSeeker")]
 public class ApplicationsController : Controller

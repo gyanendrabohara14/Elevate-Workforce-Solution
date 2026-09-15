@@ -117,11 +117,11 @@
 </div>
 
 @functions {
-    string AppTone(ElevateHire.Domain.Enums.ApplicationStatus status) => status switch
+    string AppTone(ElevateWorkforce.Domain.Enums.ApplicationStatus status) => status switch
     {
-        ElevateHire.Domain.Enums.ApplicationStatus.Selected => "success",
-        ElevateHire.Domain.Enums.ApplicationStatus.Interview or ElevateHire.Domain.Enums.ApplicationStatus.Shortlisted => "info",
-        ElevateHire.Domain.Enums.ApplicationStatus.Rejected or ElevateHire.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Selected => "success",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Interview or ElevateWorkforce.Domain.Enums.ApplicationStatus.Shortlisted => "info",
+        ElevateWorkforce.Domain.Enums.ApplicationStatus.Rejected or ElevateWorkforce.Domain.Enums.ApplicationStatus.Withdrawn => "danger",
         _ => "warning"
     };
 }

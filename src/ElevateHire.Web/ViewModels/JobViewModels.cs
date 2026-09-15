@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using ElevateHire.Domain.Enums;
+using ElevateWorkforce.Domain.Enums;
 
-namespace ElevateHire.Web.ViewModels;
+namespace ElevateWorkforce.Web.ViewModels;
 
 public class JobFormViewModel
 {
@@ -81,7 +81,7 @@ public class JobSearchViewModel
     public int PageSize { get; set; } = 9;
     public int Total { get; set; }
     public int TotalPages { get; set; }
-    public IEnumerable<ElevateHire.Domain.Entities.Job> Jobs { get; set; } = new List<ElevateHire.Domain.Entities.Job>();
+    public IEnumerable<ElevateWorkforce.Domain.Entities.Job> Jobs { get; set; } = new List<ElevateWorkforce.Domain.Entities.Job>();
     public IEnumerable<string> Categories { get; set; } = Enum.GetNames<JobCategory>();
     public IEnumerable<string> JobTypes { get; set; } = Enum.GetNames<JobType>();
     public IEnumerable<string> ExperienceLevels { get; set; } = Enum.GetNames<ExperienceLevel>();
@@ -178,7 +178,7 @@ public class CompanyListViewModel
     public int PageSize { get; set; } = 10;
     public int Total { get; set; }
     public int TotalPages { get; set; }
-    public IEnumerable<ElevateHire.Domain.Entities.Company> Companies { get; set; } = new List<ElevateHire.Domain.Entities.Company>();
+    public IEnumerable<ElevateWorkforce.Domain.Entities.Company> Companies { get; set; } = new List<ElevateWorkforce.Domain.Entities.Company>();
 }
 
 public class UserListViewModel
@@ -190,7 +190,7 @@ public class UserListViewModel
     public int PageSize { get; set; } = 10;
     public int Total { get; set; }
     public int TotalPages { get; set; }
-    public IEnumerable<ElevateHire.Domain.Entities.User> Users { get; set; } = new List<ElevateHire.Domain.Entities.User>();
+    public IEnumerable<ElevateWorkforce.Domain.Entities.User> Users { get; set; } = new List<ElevateWorkforce.Domain.Entities.User>();
 }
 
 public class ApplicationsDashboardListViewModel
@@ -200,5 +200,5 @@ public class ApplicationsDashboardListViewModel
     public int PageSize { get; set; } = 10;
     public int Total { get; set; }
     public int TotalPages { get; set; }
-    public IEnumerable<ElevateHire.Domain.Entities.JobApplication> Applications { get; set; } = new List<ElevateHire.Domain.Entities.JobApplication>();
+    public IEnumerable<ElevateWorkforce.Domain.Entities.JobApplication> Applications { get; set; } = new List<ElevateWorkforce.Domain.Entities.JobApplication>();
 }

@@ -1,6 +1,6 @@
-using ElevateHire.Infrastructure.Storage;
+using ElevateWorkforce.Infrastructure.Storage;
 
-namespace ElevateHire.UnitTests;
+namespace ElevateWorkforce.UnitTests;
 
 public class FileStorageServiceTests : IDisposable
 {
@@ -8,7 +8,7 @@ public class FileStorageServiceTests : IDisposable
 
     public FileStorageServiceTests()
     {
-        _root = Path.Combine(Path.GetTempPath(), "elevatehire-tests", Guid.NewGuid().ToString("N"));
+        _root = Path.Combine(Path.GetTempPath(), "elevateworkforce-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_root);
     }
 

@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace ElevateHire.Infrastructure.Caching;
+namespace ElevateWorkforce.Infrastructure.Caching;
 
 public sealed class RedisCacheService : ICacheService
 {

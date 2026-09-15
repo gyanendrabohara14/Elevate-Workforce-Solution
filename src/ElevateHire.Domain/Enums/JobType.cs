@@ -1,4 +1,4 @@
-namespace ElevateHire.Domain.Enums;
+namespace ElevateWorkforce.Domain.Enums;
 
 public enum JobType
 {

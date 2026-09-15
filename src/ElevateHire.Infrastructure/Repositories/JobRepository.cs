@@ -1,9 +1,9 @@
-using ElevateHire.Application.Interfaces;
-using ElevateHire.Domain.Entities;
+using ElevateWorkforce.Application.Interfaces;
+using ElevateWorkforce.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using ElevateHire.Infrastructure.Data;
+using ElevateWorkforce.Infrastructure.Data;
 
-namespace ElevateHire.Infrastructure.Repositories;
+namespace ElevateWorkforce.Infrastructure.Repositories;
 
 public class JobRepository : IJobRepository
 {

@@ -1,12 +1,12 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using ElevateHire.Application.AI;
-using ElevateHire.Application.Interfaces;
+using ElevateWorkforce.Application.AI;
+using ElevateWorkforce.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ElevateHire.Infrastructure.AI;
+namespace ElevateWorkforce.Infrastructure.AI;
 
 public sealed class GeminiOptions
 {

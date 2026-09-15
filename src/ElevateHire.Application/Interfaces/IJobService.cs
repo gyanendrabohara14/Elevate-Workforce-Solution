@@ -1,6 +1,6 @@
-using ElevateHire.Domain.Entities;
+using ElevateWorkforce.Domain.Entities;
 
-namespace ElevateHire.Application.Interfaces;
+namespace ElevateWorkforce.Application.Interfaces;
 
 public interface IJobService
 {
