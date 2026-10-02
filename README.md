@@ -49,7 +49,8 @@ The responsive Razor interface includes separate job-seeker and employer workflo
 
 ```
 ElevateWorkforce.slnx
-docker/docker-compose.yml      # PostgreSQL container
+docker/docker-compose.yml      # App + PostgreSQL + Redis + smtp4dev stack
+Dockerfile                     # Container build for the ASP.NET Core app
 src/
   ElevateWorkforce.Domain           # Entities, enums, business rules
   ElevateWorkforce.Application      # Services, DTOs, interfaces
@@ -57,7 +58,7 @@ src/
   ElevateWorkforce.Web              # MVC/API controllers, views, wwwroot assets
 tests/
   ElevateWorkforce.UnitTests        # unit tests (services, domain, storage, API registration)
-  ElevateWorkforce.IntegrationTests # 6 tests through a real web server + DB
+  ElevateWorkforce.IntegrationTests # real web server + DB integration tests
 ```
 
 ## Prerequisites
@@ -67,37 +68,30 @@ tests/
 
 ## Getting started
 
-1. Start the local services:
+1. Start the full local stack with Docker:
 
    ```bash
-  docker compose -f docker/docker-compose.yml up -d
-  ```
-
-    This starts PostgreSQL on `localhost:5435`, Redis on `localhost:6379`, and
-    smtp4dev on SMTP port `2525` with its web inbox at http://localhost:5000.
-
-2. Create the schema (migration included) — or simply run the app; it applies
-   migrations and seeds data automatically on startup:
-
-   ```bash
-   dotnet ef database update --project src/ElevateHire.Infrastructure --startup-project src/ElevateHire.Web
+   docker compose -f docker/docker-compose.yml up -d --build
    ```
 
-3. Run the app:
+   This starts the ASP.NET app on `http://localhost:8080`, PostgreSQL on `localhost:5435`, Redis on `localhost:6379`, and smtp4dev on SMTP port `2525` with its inbox at http://localhost:5000.
+
+2. If you want to run the app directly on your machine instead of Docker, create/update the schema and start the app:
 
    ```bash
-   dotnet run --project src/ElevateHire.Web
+   dotnet ef database update --project src/ElevateWorkforce.Infrastructure --startup-project src/ElevateWorkforce.Web
+   dotnet run --project src/ElevateWorkforce.Web
    ```
 
-  Open http://localhost:5266
+   Open http://localhost:5266
 
-  The API is available at http://localhost:5266/api/User and the OpenAPI
-  document is available at http://localhost:5266/openapi/v1.json.
+   The API is available at http://localhost:5266/api/User and the OpenAPI
+   document is available at http://localhost:5266/openapi/v1.json.
 
    > Run with `dotnet run --project` (not the raw DLL) so CSS/JS/static assets are
    > served correctly via static web assets in Development.
 
-4. Run the tests (requires the database container from step 1 for integration tests):
+3. Run the tests (requires the database container from step 1 for integration tests):
 
    ```bash
    dotnet test
@@ -115,7 +109,7 @@ The app seeds realistic demo data (users, companies, jobs, applications) on firs
 
 ## Configuration
 
-`src/ElevateHire.Web/appsettings.json`:
+`src/ElevateWorkforce.Web/appsettings.json`:
 
 - `ConnectionStrings:DefaultConnection` — PostgreSQL connection
 - `ConnectionStrings:Redis` — Redis connection, normally `localhost:6379`
@@ -134,7 +128,7 @@ Gemini has a limited free tier for eligible models and accounts, but it is not u
 Create a key in Google AI Studio, then store it locally without editing `appsettings.json`:
 
 ```bash
-dotnet user-secrets set "Gemini:ApiKey" "YOUR_GEMINI_API_KEY" --project src/ElevateHire.Web
+dotnet user-secrets set "Gemini:ApiKey" "YOUR_GEMINI_API_KEY" --project src/ElevateWorkforce.Web
 ```
 
 The application already calls the Gemini REST API for job descriptions, cover letters, and candidate insights. If no key is configured, those features return a graceful unavailable response instead of failing the website.

@@ -71,7 +71,7 @@ strings (`$$"""`) to avoid JSON-brace escaping issues.
 
 `ApplicationDbContextFactory` provides a design-time factory so `dotnet ef` works without
 starting the whole host. Migrations live under
-`src/ElevateHire.Infrastructure/Migrations`. On app startup, `Program.cs` runs
+`src/ElevateWorkforce.Infrastructure/Migrations`. On app startup, `Program.cs` runs
 `db.Database.MigrateAsync()` then `SeedData.InitializeAsync`.
 
 ## Tests
