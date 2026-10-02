@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "For Employers";
+    ViewData["BodyClass"] = "page-inner";
+}
+
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow">For employers</span>
+        <h1>Hire with confidence</h1>
+        <p>Verify your company, post roles, and manage applicants in one transparent pipeline.</p>
+        <a asp-controller="Account" asp-action="Register" asp-route-role="Employer" class="btn btn-primary mt-2">Post a job</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h4>Verified listings</h4>
+                    <p>Companies are verified first, then jobs go live instantly — keeping listings trustworthy.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h4>Candidate pipeline</h4>
+                    <p>Shortlist, reject and move candidates to interview with a structured, reviewable workflow.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <h4>AI-assisted insights</h4>
+                    <p>See matching skills and potential gaps per candidate so interviews stay focused.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

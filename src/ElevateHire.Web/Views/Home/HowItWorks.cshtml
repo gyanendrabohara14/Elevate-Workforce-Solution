@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "How It Works";
+    ViewData["BodyClass"] = "page-inner";
+}
+
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow">How it works</span>
+        <h1>Recruitment, made transparent</h1>
+        <p>From posting to offer, every step is structured, verifiable and connected to the data that matters.</p>
+    </div>
+</section>
+
+<section class="section how-section">
+    <div class="container">
+        <div class="how-grid">
+            <div class="how-step how-step--left">
+                <div class="how-step__num">01</div>
+                <h3>Employers post jobs</h3>
+                <p>Verify your company once, then publish detailed listings that go live for every candidate.</p>
+            </div>
+            <div class="how-step how-step--right">
+                <div class="how-step__num">02</div>
+                <h3>Seekers apply</h3>
+                <p>Candidates build a structured profile, upload a resume and apply to matching roles in a few clicks.</p>
+            </div>
+            <div class="how-step how-step--left">
+                <div class="how-step__num">03</div>
+                <h3>AI assists the match</h3>
+                <p>Our AI highlights matching skills and gaps so both sides move forward with clearer insight.</p>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a asp-controller="Account" asp-action="GetStarted" class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+</section>

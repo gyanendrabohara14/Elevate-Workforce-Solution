@@ -54,6 +54,10 @@ public class HomeController : Controller
 
     public IActionResult Privacy() => View();
 
+    public IActionResult HowItWorks() => View();
+
+    public IActionResult ForEmployers() => View();
+
     [Route("/error")]
     public IActionResult Error() => View();
 }

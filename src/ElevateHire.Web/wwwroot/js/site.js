@@ -23,8 +23,8 @@
         if (heroHeading) {
             var heroItems = document.querySelectorAll(".hero .hero-reveal");
             gsap.from(heroItems, {
-                y: 30, opacity: 0, duration: 0.7, stagger: 0.12, ease: "power3.out",
-                delay: 0.1
+                y: 30, duration: 0.7, stagger: 0.12, ease: "power3.out",
+                delay: 0.1, immediateRender: false
             });
         }
 
@@ -32,7 +32,7 @@
         var heroCards = document.querySelectorAll(".hero__card");
         if (heroCards.length) {
             gsap.from(heroCards, {
-                y: 40, opacity: 0, duration: 0.8, stagger: 0.15, delay: 0.3, ease: "power3.out"
+                y: 40, duration: 0.8, stagger: 0.15, delay: 0.3, ease: "power3.out", immediateRender: false
             });
             heroCards.forEach(function (card) {
                 gsap.to(card, {
@@ -43,8 +43,8 @@
 
         // Scroll reveals
         gsap.utils.toArray(".reveal").forEach(function (el) {
-            gsap.fromTo(el, { y: 36, opacity: 0 }, {
-                y: 0, opacity: 1, duration: 0.7, ease: "power2.out",
+            gsap.fromTo(el, { y: 36 }, {
+                y: 0, duration: 0.7, ease: "power2.out", immediateRender: false,
                 scrollTrigger: { trigger: el, start: "top 88%" }
             });
         });

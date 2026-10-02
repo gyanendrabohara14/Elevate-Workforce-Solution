@@ -1,17 +1,11 @@
 @model JobSeekerProfileViewModel
 @{
     ViewData["Title"] = "My Profile";
+    ViewData["NavActive"] = "profile";
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <h4 class="dash-sidebar__title">Job Seeker</h4>
-        <a asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a>
-        <a asp-controller="JobSeeker" asp-action="Profile" class="active">Profile</a>
-        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
-        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
-        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
-    </aside>
+    <partial name="_JobSeekerNav" />
     <main class="dash-main">
         <div class="container py-4">
             <div class="mb-4">

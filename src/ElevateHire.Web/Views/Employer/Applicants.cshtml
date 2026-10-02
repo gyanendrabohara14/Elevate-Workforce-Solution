@@ -1,17 +1,11 @@
 @model EmployerApplicantsViewModel
 @{
     ViewData["Title"] = "Applicants";
+    ViewData["NavActive"] = "applicants";
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <h4 class="dash-sidebar__title">Employer</h4>
-        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
-        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
-        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
-        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
-        <a asp-controller="Employer" asp-action="Applicants" class="active">Applicants</a>
-    </aside>
+    <partial name="_EmployerNav" />
     <main class="dash-main">
         <div class="page-header">
             <div class="container">

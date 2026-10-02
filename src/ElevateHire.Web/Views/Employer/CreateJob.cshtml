@@ -1,19 +1,13 @@
 @model JobFormViewModel
 @{
     ViewData["Title"] = "Post a Job";
+    ViewData["NavActive"] = "post";
     ViewData["FormAction"] = "CreateJob";
     ViewData["SubmitText"] = "Post job";
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <h4 class="dash-sidebar__title">Employer</h4>
-        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
-        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
-        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
-        <a asp-controller="Employer" asp-action="CreateJob" class="active">Post a Job</a>
-        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
-    </aside>
+    <partial name="_EmployerNav" />
     <main class="dash-main">
         <div class="container py-4">
             <div class="mb-4">

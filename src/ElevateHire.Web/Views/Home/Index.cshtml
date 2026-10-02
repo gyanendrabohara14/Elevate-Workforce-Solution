@@ -1,59 +1,62 @@
 @model HomeViewModel
 @{
-    ViewData["Title"] = "Better Jobs. Better Matches. Better Careers.";
+    ViewData["Title"] = "Find work that moves you forward.";
+    ViewData["BodyClass"] = "page-home";
 }
 
-<!-- HERO -->
 <section class="hero">
-    <div class="hero__glow"></div>
     <div class="container">
-        <div class="row align-items-center g-5">
+        <div class="row align-items-center g-4">
             <div class="col-lg-6">
-                <span class="eyebrow hero-reveal">AI-Assisted Recruitment in Nepal</span>
-                <h1 class="hero__heading hero-reveal">Find work that moves you <em>forward.</em></h1>
+                <h1 class="hero__heading hero-reveal">Find work that<br />moves you <em>forward.</em></h1>
                 <p class="hero__sub hero-reveal">
-                    Discover meaningful opportunities, connect with trusted employers and move through the hiring process with greater clarity.
+                    Elevate Workforce Solutions connects job seekers with trusted employers
+                    across Nepal. Discover roles, apply with confidence, and find the right
+                    next step for your career.
                 </p>
-                <div class="hero__ctas hero-reveal">
-                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary btn-lg">Explore Jobs</a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline btn-lg">Find Talent</a>
-                </div>
-
-                <form asp-controller="Jobs" asp-action="Index" method="get" class="hero__search hero-reveal d-flex flex-column flex-sm-row">
-                    <input name="keyword" class="form-control border-0 flex-grow-1" placeholder="Job title, skills or company" aria-label="Search jobs" />
-                    <select name="category" class="form-select border-0" aria-label="Category">
-                        <option value="">Any category</option>
-                        @foreach (var cat in Model.Categories)
-                        {
-                            <option value="@cat">@cat</option>
-                        }
-                    </select>
-                    <button type="submit" class="btn btn-primary ms-sm-2">Search</button>
+                <form asp-controller="Jobs" asp-action="Index" method="get" class="hero__search hero-reveal">
+                    <div class="hero__search-field">
+                        <label for="keyword">Keyword</label>
+                        <input id="keyword" name="keyword" class="form-control" placeholder="Job title or skill" aria-label="Search jobs" />
+                    </div>
+                    <div class="hero__search-field">
+                        <label for="location">Location</label>
+                        <input id="location" name="location" class="form-control" placeholder="City" aria-label="Location" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="hero__visual">
-                    <div class="hero__card hero__card--main">
-                        <div class="avatar" style="background:#8B5CF6">SK</div>
-                        <div>
-                            <div class="role">Software Engineer</div>
-                            <div class="meta">F1Soft International · Kathmandu</div>
-                            <span class="match-pill match-pill--high">92% match</span>
+            <div class="col-lg-6">
+                <div class="hero__visual" role="img" aria-label="A preview of job opportunities and candidate matches">
+                    <div class="hero-board">
+                        <div class="hero-board__top">
+                            <span class="hero-board__label"><span class="hero-board__live"></span> Your next step</span>
+                            <span class="hero-board__count">3 new matches</span>
                         </div>
-                    </div>
-                    <div class="hero__card hero__card--small-a">
-                        <div class="avatar" style="background:#09090B">HT</div>
-                        <div>
-                            <div class="role">Backend Developer</div>
-                            <div class="meta">Himalayan Tech</div>
+                        <div class="hero-board__intro">
+                            <span class="hero-board__eyebrow">Recommended for you</span>
+                            <h2>Good work is closer than you think.</h2>
+                            <p>Opportunities matched to your skills and goals.</p>
                         </div>
-                    </div>
-                    <div class="hero__card hero__card--small-b">
-                        <div class="match-pill" style="font-size:1rem">✓ Shortlisted</div>
-                        <div>
-                            <div class="role">Interview scheduled</div>
-                            <div class="meta">Thu 10:00 AM</div>
-                        </div>
+                        <article class="hero-board__job">
+                            <div class="hero-board__company">K</div>
+                            <div class="hero-board__details">
+                                <span class="hero-board__company-name">Kantipur Digital</span>
+                                <h3>Product Designer</h3>
+                                <span class="hero-board__meta">Kathmandu · Full time</span>
+                            </div>
+                            <span class="hero-board__match">92% match</span>
+                        </article>
+                        <article class="hero-board__job hero-board__job--muted">
+                            <div class="hero-board__company hero-board__company--alt">W</div>
+                            <div class="hero-board__details">
+                                <span class="hero-board__company-name">WorldLink</span>
+                                <h3>UX Researcher</h3>
+                                <span class="hero-board__meta">Lalitpur · Hybrid</span>
+                            </div>
+                            <span class="hero-board__arrow" aria-hidden="true">↗</span>
+                        </article>
+                        <div class="hero-board__footer"><span>Thoughtful matches. Real opportunities.</span><span aria-hidden="true">✳</span></div>
                     </div>
                 </div>
             </div>
@@ -61,32 +64,7 @@
     </div>
 </section>
 
-<!-- METRICS -->
-<section class="metrics">
-    <div class="container">
-        <div class="row text-center g-4">
-            <div class="col-6 col-lg-3">
-                <div class="metric__value" data-count="@Model.Stats.ActiveJobs">0</div>
-                <div class="metric__label">Active jobs</div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="metric__value" data-count="@Model.Stats.Companies">0</div>
-                <div class="metric__label">Trusted companies</div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="metric__value" data-count="@Model.Stats.JobSeekers">0</div>
-                <div class="metric__label">Job seekers</div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="metric__value" data-count="@Model.Stats.Applications">0</div>
-                <div class="metric__label">Applications</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- FEATURED JOBS -->
-<section class="section section-alt">
+<section class="section">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
             <div>
@@ -99,158 +77,64 @@
             @foreach (var job in Model.FeaturedJobs)
             {
                 <div class="col-md-6 col-lg-4 reveal">
-                    <div class="job-card">
-                        <div class="job-card__company">
-                            <div class="job-card__logo">@(job.Company?.Name?.Substring(0, 1) ?? "J")</div>
-                            <span class="tag tag--featured">Featured</span>
-                            <span class="ms-auto job-card__company-name">@job.Company?.Name</span>
-                        </div>
-                        <h3 class="job-card__title"><a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">@job.Title</a></h3>
-                        <div class="job-card__tags">
-                            <span class="tag">@job.Location</span>
-                            <span class="tag">@job.JobType</span>
-                            <span class="tag">@job.ExperienceLevel</span>
-                            @if (job.MinSalary.HasValue)
-                            {
-                                <span class="tag">NPR @job.MinSalary.Value.ToString("N0")+</span>
-                            }
-                        </div>
-                        <div class="job-card__footer">
-                            <span class="tag">Posted @job.PublishedAt?.ToString("MMM d")</span>
-                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline">View job</a>
-                        </div>
-                    </div>
+                    <partial name="~/Views/Jobs/_JobCard.cshtml" model="(job, false)" />
                 </div>
             }
         </div>
     </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="section">
+<section class="section how-section">
     <div class="container">
         <div class="text-center mb-5">
             <span class="eyebrow">How it works</span>
             <h2 class="section__title">Recruitment, made transparent</h2>
-            <p class="section__lead mx-auto">From posting to offer, every step is structured, verifiable and connected to the data that matters.</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4 reveal">
-                <div class="step">
-                    <div class="step__num">1</div>
-                    <h4>Employers post jobs</h4>
-                    <p>Verify your company once, then publish detailed listings that go live instantly for every candidate.</p>
-                </div>
+        <div class="how-grid">
+            <div class="how-step how-step--left reveal">
+                <div class="how-step__num">01</div>
+                <h3>Employers post jobs</h3>
+                <p>Verify your company once, then publish detailed listings that go live for every candidate.</p>
             </div>
-            <div class="col-md-4 reveal">
-                <div class="step">
-                    <div class="step__num">2</div>
-                    <h4>Seekers apply</h4>
-                    <p>Candidates build a structured profile, upload a resume and apply to matching roles in a few clicks.</p>
-                </div>
+            <div class="how-step how-step--right reveal">
+                <div class="how-step__num">02</div>
+                <h3>Seekers apply</h3>
+                <p>Candidates build a structured profile, upload a resume and apply to matching roles in a few clicks.</p>
             </div>
-            <div class="col-md-4 reveal">
-                <div class="step">
-                    <div class="step__num">3</div>
-                    <h4>AI assists the match</h4>
-                    <p>Our AI highlights matching skills and gaps so both sides move forward with clearer insight - never as a replacement for human judgement.</p>
-                </div>
+            <div class="how-step how-step--left reveal">
+                <div class="how-step__num">03</div>
+                <h3>AI assists the match</h3>
+                <p>Our AI highlights matching skills and gaps so both sides move forward with clearer insight.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- FOR JOB SEEKERS + FOR EMPLOYERS -->
-<section class="section section-alt">
+<section class="split-band">
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-6 reveal">
-                <span class="eyebrow">For job seekers</span>
-                <h2 class="section__title">Take control of your career</h2>
-                <div class="feature-item">
-                    <div class="feature-item__icon">✓</div>
-                    <div>
-                        <h5>Search with intent</h5>
-                        <p>Filter by role, location, salary, job type and experience - all powered by the live database.</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item__icon">✓</div>
-                    <div>
-                        <h5>Track every application</h5>
-                        <p>Follow the full lifecycle from applied to interview with a clear, visual status timeline.</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item__icon">✓</div>
-                    <div>
-                        <h5>Build once, apply everywhere</h5>
-                        <p>A structured profile and a secure resume you keep in one place, ready whenever opportunity appears.</p>
-                    </div>
-                </div>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-primary mt-2">Create my profile</a>
+                <h2>Take control of your career</h2>
+                <ul class="split-list">
+                    <li>Search with intent — filter by role, location, salary and experience.</li>
+                    <li>Track every application from applied to interview.</li>
+                    <li>Build a profile once and apply everywhere.</li>
+                </ul>
+                <a asp-controller="Account" asp-action="Register" asp-route-role="JobSeeker" class="btn btn-primary mt-2">Create my profile</a>
             </div>
             <div class="col-lg-6 reveal">
-                <span class="eyebrow">For employers</span>
-                <h2 class="section__title">Hire with confidence</h2>
-                <div class="feature-item">
-                    <div class="feature-item__icon" style="background:#D8B4FE">◆</div>
-                    <div>
-                        <h5>Verified job listings</h5>
-                        <p>Companies are verified first, then post jobs that go live instantly — keeping listings trustworthy and high quality.</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item__icon" style="background:#D8B4FE">◆</div>
-                    <div>
-                        <h5>Managed candidate pipeline</h5>
-                        <p>Shortlist, reject and move candidates to interview with a structured, reviewable workflow.</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item__icon" style="background:#D8B4FE">◆</div>
-                    <div>
-                        <h5>AI-assisted insights</h5>
-                        <p>See matching skills and potential gaps per candidate to focus your interviews where they matter.</p>
-                    </div>
-                </div>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-accent mt-2">Post your first job</a>
+                <h2>Hire with confidence</h2>
+                <ul class="split-list">
+                    <li>Verified companies post jobs that go live instantly.</li>
+                    <li>Manage a clear candidate pipeline: shortlist, interview, hire.</li>
+                    <li>Use AI-assisted insights to focus interviews where they matter.</li>
+                </ul>
+                <a asp-controller="Account" asp-action="Register" asp-route-role="Employer" class="btn btn-primary mt-2">Post your first job</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- AI BAND -->
-<section class="section section-dark">
-    <div class="container">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-7 reveal">
-                <span class="eyebrow" style="color:#C4B5FD">AI-assisted recruitment</span>
-                <h2 class="section__title">Better decisions, with AI support</h2>
-                <p>
-                    ElevateWorkforce uses AI to help employers draft job descriptions, help seekers craft cover letters,
-                    and surface candidate insights. The technology supports people - it never replaces the human decision.
-                </p>
-            </div>
-            <div class="col-lg-5 reveal">
-                <div class="p-4" style="background:rgba(255,255,255,.06);border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.1)">
-                    <div style="color:#fff;font-weight:700;margin-bottom:.4rem">92% match</div>
-                    <div class="mb-1" style="font-size:.85rem">
-                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16A34A;margin-right:.4rem"></span>Strong experience overlap
-                    </div>
-                    <div class="mb-1" style="font-size:.85rem">
-                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#C4B5FD;margin-right:.4rem"></span>9 of 11 required skills present
-                    </div>
-                    <div style="font-size:.85rem">
-                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706;margin-right:.4rem"></span>Gap: cloud deployment - recommended growth area
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TESTIMONIALS -->
 <section class="section">
     <div class="container">
         <div class="text-center mb-5">
@@ -262,7 +146,7 @@
                 <div class="testimonial">
                     <p class="testimonial__quote">"I applied to three roles in a week and could see exactly where each stood. No more wondering whether anyone had even seen my application."</p>
                     <div class="testimonial__author">
-                        <div class="testimonial__avatar" style="background:#8B5CF6">AG</div>
+                        <div class="testimonial__avatar">AG</div>
                         <div>
                             <div class="testimonial__name">Anita Gurung</div>
                             <div class="testimonial__meta">Data Analyst · Kathmandu</div>
@@ -274,7 +158,7 @@
                 <div class="testimonial">
                     <p class="testimonial__quote">"The AI-assisted insights helped our team focus interviews on the candidates who truly fit, saving us hours of screening."</p>
                     <div class="testimonial__author">
-                        <div class="testimonial__avatar" style="background:#09090B">•</div>
+                        <div class="testimonial__avatar">PA</div>
                         <div>
                             <div class="testimonial__name">Priya Adhikari</div>
                             <div class="testimonial__meta">HR Manager · Kathmandu</div>
@@ -286,7 +170,7 @@
                 <div class="testimonial">
                     <p class="testimonial__quote">"Applying was straightforward and I always knew the current status of my application. The timeline feature is genuinely useful."</p>
                     <div class="testimonial__author">
-                        <div class="testimonial__avatar" style="background:#7C3AED">SK</div>
+                        <div class="testimonial__avatar">SK</div>
                         <div>
                             <div class="testimonial__name">Suman Karki</div>
                             <div class="testimonial__meta">Frontend Developer · Kathmandu</div>
@@ -298,14 +182,65 @@
     </div>
 </section>
 
-<!-- FINAL CTA -->
-<section class="section section-alt">
+<section class="section section-alt cta-band">
     <div class="container text-center">
         <h2 class="section__title">Ready to move your career forward?</h2>
-        <p class="section__lead mx-auto">Join a growing community of seekers and employers building better careers in Nepal.</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a asp-controller="Jobs" asp-action="Index" class="btn btn-primary btn-lg">Explore Jobs</a>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-outline btn-lg">Create an Account</a>
+        <a asp-controller="Account" asp-action="GetStarted" class="btn btn-primary btn-lg mt-2">Get Started</a>
+    </div>
+</section>
+
+<section class="section faq-section">
+    <div class="container">
+        <h2 class="section__title mb-4">Frequently asked questions</h2>
+        <div class="faq-list accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How do I create an account and start applying?</button>
+                </h3>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Choose Get Started, select Job Seeker, and complete your profile. You can then browse roles and apply in a few clicks.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">How do employers post jobs on the platform?</button>
+                </h3>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Create an employer account, complete your company profile for verification, then post jobs from the employer portal.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">How does AI assistance work in matching?</button>
+                </h3>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">AI highlights overlapping skills and gaps so people can decide faster. It never replaces a hiring manager's judgement.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Can I manage applications as a seeker?</button>
+                </h3>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Yes. Your dashboard tracks every application from under review to interview and offer.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">Can employers manage candidates through filters?</button>
+                </h3>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Employers can filter applicants by job and status, then shortlist, interview, or reject from one pipeline.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">Is there support for multiple locations or job types?</button>
+                </h3>
+                <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Yes. Search by city, category, job type, experience and salary, including remote and hybrid roles.</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

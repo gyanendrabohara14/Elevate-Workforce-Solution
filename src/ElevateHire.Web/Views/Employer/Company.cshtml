@@ -1,6 +1,9 @@
 @model CompanyFormViewModel
 @{
     ViewData["Title"] = "Company Profile";
+    ViewData["NavActive"] = "company";
+    ViewData["SidebarTitle"] = Model.Name;
+    ViewData["SidebarSub"] = Model.Industry;
     var status = ViewBag.CompanyStatus as ElevateWorkforce.Domain.Enums.CompanyStatus? ?? ElevateWorkforce.Domain.Enums.CompanyStatus.PendingVerification;
     string Tone(ElevateWorkforce.Domain.Enums.CompanyStatus s) => s switch
     {
@@ -12,14 +15,7 @@
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <h4 class="dash-sidebar__title">Employer</h4>
-        <a asp-controller="Employer" asp-action="Dashboard">Dashboard</a>
-        <a asp-controller="Employer" asp-action="Company" class="active">Company Profile</a>
-        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
-        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
-        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
-    </aside>
+    <partial name="_EmployerNav" />
     <main class="dash-main">
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
@@ -113,7 +109,6 @@
                     <a asp-controller="Employer" asp-action="Dashboard" class="btn btn-outline">Cancel</a>
                 </div>
             </form>
-        </div>
     </main>
 </div>
 

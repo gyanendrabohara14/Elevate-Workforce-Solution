@@ -1,14 +1,15 @@
 @model ApplyViewModel
 @{
     ViewData["Title"] = "Apply";
+    ViewData["BodyClass"] = "page-inner";
 }
 
-<div class="page-header">
+<section class="page-hero">
     <div class="container">
         <h1>Apply for position</h1>
         <p>@Model.JobTitle · @Model.CompanyName</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5">
     <div class="row justify-content-center">

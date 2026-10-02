@@ -1,6 +1,9 @@
 @model JobSeekerDashboardViewModel
 @{
     ViewData["Title"] = "Job Seeker Dashboard";
+    ViewData["NavActive"] = "dashboard";
+    ViewData["SidebarTitle"] = Model.Profile.User?.FullName ?? "Job Seeker";
+    ViewData["SidebarSub"] = Model.Profile.ProfessionalTitle ?? "Job Seeker";
     var name = Model.Profile.User?.FullName ?? "Job Seeker";
     var initials = name.Length > 0
         ? string.Concat(name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(p => p[0])).ToUpperInvariant()
@@ -15,21 +18,7 @@
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <div class="dash-sidebar__user">
-            <div class="dash-sidebar__avatar">@initials</div>
-            <div>
-                <div class="dash-sidebar__name">@name</div>
-                <div class="dash-sidebar__role">@(Model.Profile.ProfessionalTitle ?? "Job Seeker")</div>
-            </div>
-        </div>
-        <h4 class="dash-sidebar__title">Job Seeker</h4>
-        <a asp-controller="JobSeeker" asp-action="Dashboard" class="active">Dashboard</a>
-        <a asp-controller="JobSeeker" asp-action="Profile">Profile</a>
-        <a asp-controller="Applications" asp-action="MyApplications">My Applications</a>
-        <a asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a>
-        <a asp-controller="JobSeeker" asp-action="Notifications">Notifications</a>
-    </aside>
+    <partial name="_JobSeekerNav" />
     <main class="dash-main">
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">

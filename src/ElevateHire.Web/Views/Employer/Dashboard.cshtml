@@ -1,6 +1,9 @@
 @model EmployerDashboardViewModel
 @{
     ViewData["Title"] = "Employer Dashboard";
+    ViewData["NavActive"] = "dashboard";
+    ViewData["SidebarTitle"] = Model.Company.Name;
+    ViewData["SidebarSub"] = Model.Company.Industry;
     var company = Model.Company;
     string CompanyTone(ElevateWorkforce.Domain.Enums.CompanyStatus s) => s switch
     {
@@ -19,21 +22,7 @@
 }
 
 <div class="dash-shell">
-    <aside class="dash-sidebar">
-        <div class="dash-sidebar__user">
-            <div class="dash-sidebar__avatar">@(company.Name?.Length > 0 ? company.Name.Substring(0, 1) : "E")</div>
-            <div>
-                <div class="dash-sidebar__name">@company.Name</div>
-                <div class="dash-sidebar__role">@company.Industry</div>
-            </div>
-        </div>
-        <h4 class="dash-sidebar__title">Employer</h4>
-        <a asp-controller="Employer" asp-action="Dashboard" class="active">Dashboard</a>
-        <a asp-controller="Employer" asp-action="Company">Company Profile</a>
-        <a asp-controller="Employer" asp-action="Jobs">Manage Jobs</a>
-        <a asp-controller="Employer" asp-action="CreateJob">Post a Job</a>
-        <a asp-controller="Employer" asp-action="Applicants">Applicants</a>
-    </aside>
+    <partial name="_EmployerNav" />
     <main class="dash-main">
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">

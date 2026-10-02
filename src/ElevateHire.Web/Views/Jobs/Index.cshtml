@@ -1,132 +1,132 @@
 @model JobSearchViewModel
 @{
     ViewData["Title"] = "Find Jobs";
+    ViewData["BodyClass"] = "page-jobs";
 }
 
-<div class="page-header">
+<section class="jobs-hero">
     <div class="container">
-        <h1>Find Jobs</h1>
-        <p>@Model.Total @(Model.Total == 1 ? "opportunity" : "opportunities") open right now.</p>
-    </div>
-</div>
-
-<div class="container py-4">
-    <form method="get" class="panel mb-4">
-        <div class="row g-3">
-            <div class="col-lg-3 col-md-6">
-                <label class="form-label" for="keyword">Keyword</label>
-                <input id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Title, skill or company" />
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="location">Location</label>
-                <input id="location" name="location" value="@Model.Location" class="form-control" placeholder="City" />
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="category">Category</label>
-                <select id="category" name="category" class="form-select">
-                    <option value="">All</option>
-                    @foreach (var c in Model.Categories)
-                    {
-                        <option value="@c" selected="@(Model.Category == c)">@c</option>
-                    }
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="jobType">Job type</label>
-                <select id="jobType" name="jobType" class="form-select">
-                    <option value="">All</option>
-                    @foreach (var t in Model.JobTypes)
-                    {
-                        <option value="@t" selected="@(Model.JobType == t)">@t</option>
-                    }
-                </select>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <label class="form-label" for="experience">Experience</label>
-                <select id="experience" name="experience" class="form-select">
-                    <option value="">All levels</option>
-                    @foreach (var e in Model.ExperienceLevels)
-                    {
-                        <option value="@e" selected="@(Model.Experience == e)">@e</option>
-                    }
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="minSalary">Min salary (NPR)</label>
-                <input id="minSalary" name="minSalary" type="number" value="@Model.MinSalary" class="form-control" />
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="posting">Posted</label>
-                <select id="posting" name="posted" class="form-select">
-                    <option value="">Anytime</option>
-                    <option value="today" selected="@(Model.Posted == "today")">Today</option>
-                    <option value="week" selected="@(Model.Posted == "week")">This week</option>
-                    <option value="month" selected="@(Model.Posted == "month")">This month</option>
-                </select>
-            </div>
-            <div class="col-lg-2 col-md-6">
-                <label class="form-label" for="sort">Sort by</label>
-                <select id="sort" name="sort" class="form-select">
-                    <option value="newest">Newest</option>
-                    <option value="salary" selected="@(Model.Sort == "salary")">Highest salary</option>
-                </select>
-            </div>
-            <div class="col-12 d-flex align-items-end gap-2">
-                <button type="submit" class="btn btn-primary">Apply filters</button>
-                <a asp-controller="Jobs" asp-action="Index" class="btn btn-ghost">Reset</a>
-            </div>
-        </div>
-    </form>
-
-    @if (!Model.Jobs.Any())
-    {
-        <div class="empty-state">
-            <div class="empty-state__icon">🔍</div>
-            <h4>No jobs match your search</h4>
-            <p>Try adjusting your keywords or clearing a few filters to see more opportunities.</p>
-            <a asp-controller="Jobs" asp-action="Index" class="btn btn-outline mt-2">Clear all filters</a>
-        </div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var job in Model.Jobs)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <partial name="_JobCard" model="(job, Model.SavedIds.TryGetValue(job.Id, out var isSaved) && isSaved)" />
+        <form method="get" class="jobs-filter">
+            <div class="row g-3">
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="keyword">Keyword</label>
+                    <input id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Title, skill or company" />
                 </div>
-            }
-        </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="location">Location</label>
+                    <input id="location" name="location" value="@Model.Location" class="form-control" placeholder="City" />
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label" for="category">Category</label>
+                    <select id="category" name="category" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c" selected="@(Model.Category == c)">@c</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label" for="jobType">Job type</label>
+                    <select id="jobType" name="jobType" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var t in Model.JobTypes)
+                        {
+                            <option value="@t" selected="@(Model.JobType == t)">@t</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label" for="experience">Experience</label>
+                    <select id="experience" name="experience" class="form-select">
+                        <option value="">All levels</option>
+                        @foreach (var e in Model.ExperienceLevels)
+                        {
+                            <option value="@e" selected="@(Model.Experience == e)">@e</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="minSalary">Min salary (NPR)</label>
+                    <input id="minSalary" name="minSalary" type="number" value="@Model.MinSalary" class="form-control" />
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="posting">Posted</label>
+                    <select id="posting" name="posted" class="form-select">
+                        <option value="">Anytime</option>
+                        <option value="today" selected="@(Model.Posted == "today")">Today</option>
+                        <option value="week" selected="@(Model.Posted == "week")">This week</option>
+                        <option value="month" selected="@(Model.Posted == "month")">This month</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label" for="sort">Sort by</label>
+                    <select id="sort" name="sort" class="form-select">
+                        <option value="newest">Newest</option>
+                        <option value="salary" selected="@(Model.Sort == "salary")">Highest salary</option>
+                    </select>
+                </div>
+                <div class="col-12 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary">Apply filters</button>
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-outline">Reset</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
 
-        <nav class="mt-4" aria-label="Job results pages">
-            <ul class="pagination justify-content-center">
-                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
-                    <a class="page-link" asp-controller="Jobs" asp-action="Index"
-                       asp-route-keyword="@Model.Keyword" asp-route-location="@Model.Location"
-                       asp-route-category="@Model.Category" asp-route-jobType="@Model.JobType"
-                       asp-route-experience="@Model.Experience" asp-route-minSalary="@Model.MinSalary"
-                       asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@(Model.Page - 1)">Previous</a>
-                </li>
-                @for (int i = 1; i <= Model.TotalPages; i++)
+<div class="jobs-results">
+    <div class="container py-5">
+        @if (!Model.Jobs.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-state__icon">🔍</div>
+                <h4>No jobs match your search</h4>
+                <p>Try adjusting your keywords or clearing a few filters to see more opportunities.</p>
+                <a asp-controller="Jobs" asp-action="Index" class="btn btn-outline mt-2">Clear all filters</a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var job in Model.Jobs)
                 {
-                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <div class="col-md-6 col-lg-4">
+                        <partial name="_JobCard" model="(job, Model.SavedIds.TryGetValue(job.Id, out var isSaved) && isSaved)" />
+                    </div>
+                }
+            </div>
+
+            <nav class="mt-5" aria-label="Job results pages">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
                         <a class="page-link" asp-controller="Jobs" asp-action="Index"
                            asp-route-keyword="@Model.Keyword" asp-route-location="@Model.Location"
                            asp-route-category="@Model.Category" asp-route-jobType="@Model.JobType"
                            asp-route-experience="@Model.Experience" asp-route-minSalary="@Model.MinSalary"
-                           asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@i">@i</a>
+                           asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@(Model.Page - 1)">Previous</a>
                     </li>
-                }
-                <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link" asp-controller="Jobs" asp-action="Index"
-                       asp-route-keyword="@Model.Keyword" asp-route-location="@Model.Location"
-                       asp-route-category="@Model.Category" asp-route-jobType="@Model.JobType"
-                       asp-route-experience="@Model.Experience" asp-route-minSalary="@Model.MinSalary"
-                       asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@(Model.Page + 1)">Next</a>
-                </li>
-            </ul>
-        </nav>
-    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" asp-controller="Jobs" asp-action="Index"
+                               asp-route-keyword="@Model.Keyword" asp-route-location="@Model.Location"
+                               asp-route-category="@Model.Category" asp-route-jobType="@Model.JobType"
+                               asp-route-experience="@Model.Experience" asp-route-minSalary="@Model.MinSalary"
+                               asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-controller="Jobs" asp-action="Index"
+                           asp-route-keyword="@Model.Keyword" asp-route-location="@Model.Location"
+                           asp-route-category="@Model.Category" asp-route-jobType="@Model.JobType"
+                           asp-route-experience="@Model.Experience" asp-route-minSalary="@Model.MinSalary"
+                           asp-route-posted="@Model.Posted" asp-route-sort="@Model.Sort" asp-route-page="@(Model.Page + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
 </div>
 
 @section Scripts {

@@ -1,0 +1,20 @@
+@{
+    var active = ViewData["NavActive"] as string ?? "";
+    var title = ViewData["SidebarTitle"] as string ?? "Elevate Workforce Solutions";
+    var sub = ViewData["SidebarSub"] as string ?? "Employer";
+}
+<aside class="dash-sidebar">
+    <div class="dash-sidebar__user">
+        <img class="dash-sidebar__logo" src="~/img/logo.png" alt="" />
+        <div>
+            <div class="dash-sidebar__name">@title</div>
+            <div class="dash-sidebar__role">@sub</div>
+        </div>
+    </div>
+    <h4 class="dash-sidebar__title">Employer</h4>
+    <a asp-controller="Employer" asp-action="Dashboard" class="@(active == "dashboard" ? "active" : null)">Dashboard</a>
+    <a asp-controller="Employer" asp-action="Company" class="@(active == "company" ? "active" : null)">Company Profile</a>
+    <a asp-controller="Employer" asp-action="Jobs" class="@(active == "jobs" ? "active" : null)">Manage Jobs</a>
+    <a asp-controller="Employer" asp-action="CreateJob" class="@(active == "post" ? "active" : null)">Post a Job</a>
+    <a asp-controller="Employer" asp-action="Applicants" class="@(active == "applicants" ? "active" : null)">Applicants</a>
+</aside>

@@ -4,10 +4,7 @@
     var saved = Model.IsSaved;
 }
 <div class="job-card">
-    <div class="job-card__company">
-        <div class="job-card__logo">@(job.Company?.Name?.Substring(0, 1) ?? "J")</div>
-        <span class="job-card__company-name">@job.Company?.Name</span>
-    </div>
+    <div class="job-card__company-name">@job.Company?.Name</div>
     <h3 class="job-card__title"><a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">@job.Title</a></h3>
     <div class="job-card__tags">
         <span class="tag">@job.Location</span>
@@ -19,7 +16,7 @@
         }
     </div>
     <div class="job-card__footer">
-        <span class="tag">Posted @job.PublishedAt?.ToString("MMM d")</span>
+        <span class="job-card__posted">Posted @job.PublishedAt?.ToString("MMM d")</span>
         <div class="d-flex gap-2">
             @if (User.IsInRole("JobSeeker"))
             {
@@ -27,7 +24,7 @@
                     <span class="js-save-label">@(saved ? "Saved" : "Save")</span>
                 </button>
             }
-            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline">View</a>
+            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-primary">View job</a>
         </div>
     </div>
 </div>
