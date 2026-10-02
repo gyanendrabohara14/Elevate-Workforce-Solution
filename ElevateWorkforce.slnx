@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/ElevateHire.Application/ElevateWorkforce.Application.csproj" />
-    <Project Path="src/ElevateHire.Domain/ElevateWorkforce.Domain.csproj" />
-    <Project Path="src/ElevateHire.Infrastructure/ElevateWorkforce.Infrastructure.csproj" />
-    <Project Path="src/ElevateHire.Web/ElevateWorkforce.Web.csproj" />
+    <Project Path="src/ElevateWorkforce.Application/ElevateWorkforce.Application.csproj" />
+    <Project Path="src/ElevateWorkforce.Domain/ElevateWorkforce.Domain.csproj" />
+    <Project Path="src/ElevateWorkforce.Infrastructure/ElevateWorkforce.Infrastructure.csproj" />
+    <Project Path="src/ElevateWorkforce.Web/ElevateWorkforce.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ElevateHire.IntegrationTests/ElevateWorkforce.IntegrationTests.csproj" />

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ElevateHire.Domain\ElevateWorkforce.Domain.csproj" />
+    <ProjectReference Include="..\ElevateWorkforce.Domain\ElevateWorkforce.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

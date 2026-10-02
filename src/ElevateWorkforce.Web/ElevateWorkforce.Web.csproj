@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\ElevateHire.Domain\ElevateWorkforce.Domain.csproj" />
-    <ProjectReference Include="..\ElevateHire.Application\ElevateWorkforce.Application.csproj" />
-    <ProjectReference Include="..\ElevateHire.Infrastructure\ElevateWorkforce.Infrastructure.csproj" />
+    <ProjectReference Include="..\ElevateWorkforce.Domain\ElevateWorkforce.Domain.csproj" />
+    <ProjectReference Include="..\ElevateWorkforce.Application\ElevateWorkforce.Application.csproj" />
+    <ProjectReference Include="..\ElevateWorkforce.Infrastructure\ElevateWorkforce.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

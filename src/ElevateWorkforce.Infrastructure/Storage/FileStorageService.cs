@@ -33,19 +33,25 @@ public class FileStorageService : IFileStorageService
         await using var file = File.Create(fullPath);
         await stream.CopyToAsync(file);
 
-        return (Path.Combine(subFolder, uniqueName), uniqueName);
+        var storedName = string.Join('/', new[] { subFolder.Trim('/', '\\'), uniqueName })
+            .Replace('\\', '/');
+        return (storedName, uniqueName);
     }
 
     public Task DeleteAsync(string storedName, string subFolder)
     {
-        var fullPath = Path.Combine(_options.RootPath, storedName);
+        var fullPath = ResolvePath(storedName, subFolder);
         if (File.Exists(fullPath))
             File.Delete(fullPath);
         return Task.CompletedTask;
     }
 
-    public string ResolvePath(string storedName, string subFolder) =>
-        Path.Combine(_options.RootPath, storedName);
+    public string ResolvePath(string storedName, string subFolder)
+    {
+        var normalizedStoredName = storedName.Replace('/', Path.DirectorySeparatorChar)
+            .Replace('\\', Path.DirectorySeparatorChar);
+        return Path.Combine(_options.RootPath, normalizedStoredName.TrimStart(Path.DirectorySeparatorChar));
+    }
 }
 
 public sealed class FileStorageOptions

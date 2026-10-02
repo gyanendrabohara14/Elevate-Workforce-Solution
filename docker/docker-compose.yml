@@ -1,4 +1,38 @@
 services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: elevateworkforce-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      smtp4dev:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=elevateworkforce;Username=elevateworkforce;Password=elevateworkforce"
+      ConnectionStrings__Redis: "redis:6379"
+      Jwt__Key: "elevateworkforce-development-key-change-me-32"
+      Jwt__Issuer: "ElevateWorkforce"
+      Jwt__Audience: "ElevateWorkforce.Api"
+      Jwt__ExpirationMinutes: "60"
+      Email__Host: "smtp4dev"
+      Email__Port: "25"
+      Email__FromEmail: "no-reply@elevateworkforce.local"
+      Email__FromName: "ElevateWorkforce"
+      Email__UseSsl: "false"
+      Gemini__ApiKey: ""
+      Gemini__Model: "gemini-2.5-flash"
+      FileStorage__RootPath: "/app/wwwroot/uploads"
+    ports:
+      - "8080:8080"
+    volumes:
+      - elevateworkforce-uploads:/app/wwwroot/uploads
+
   db:
     image: postgres:16-alpine
     container_name: elevateworkforce-db
@@ -34,3 +68,4 @@ services:
 
 volumes:
   elevateworkforce-data:
+  elevateworkforce-uploads:

@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ElevateHire.Domain\ElevateWorkforce.Domain.csproj" />
-    <ProjectReference Include="..\..\src\ElevateHire.Application\ElevateWorkforce.Application.csproj" />
-    <ProjectReference Include="..\..\src\ElevateHire.Infrastructure\ElevateWorkforce.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\ElevateHire.Web\ElevateWorkforce.Web.csproj" />
+    <ProjectReference Include="..\..\src\ElevateWorkforce.Domain\ElevateWorkforce.Domain.csproj" />
+    <ProjectReference Include="..\..\src\ElevateWorkforce.Application\ElevateWorkforce.Application.csproj" />
+    <ProjectReference Include="..\..\src\ElevateWorkforce.Infrastructure\ElevateWorkforce.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\ElevateWorkforce.Web\ElevateWorkforce.Web.csproj" />
   </ItemGroup>
 
 </Project>
