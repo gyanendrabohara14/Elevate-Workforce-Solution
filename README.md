@@ -4,6 +4,8 @@ An **AI-assisted job recruitment platform built for Nepal**. ASP.NET Core MVC pl
 
 Employers post jobs, job seekers build profiles and apply, and administrators moderate the verification workflow. Gemini-powered features generate job descriptions, AI-draft cover letters, and candidate matching insights.
 
+The responsive Razor interface includes separate job-seeker and employer workflows, a WebGL cloud-sky background with a solid-color fallback, and shared brand logos and favicon.
+
 ## Features
 
 - **Roles**: Admin · Employer · Job Seeker (ASP.NET Core Identity)
@@ -21,6 +23,7 @@ Employers post jobs, job seekers build profiles and apply, and administrators mo
   - Platform KPIs and moderation queues (pending companies and jobs)
   - Approve/reject/unpublish/restore jobs, verify/reject companies, disable users
   - All rows are real database queries
+- **Web experience**: Responsive Razor views, shared branding, and an animated WebGL cloud background that respects reduced-motion preferences
 - **API registration**
   - `POST /api/User` registers JobSeeker and Employer accounts
   - Returns validation, duplicate-email, role, and Identity errors with appropriate HTTP status codes
@@ -33,7 +36,7 @@ Employers post jobs, job seekers build profiles and apply, and administrators mo
 
 | Layer | Technology |
 | --- | --- |
-| App | ASP.NET Core MVC + Web API (.NET 10), Razor views |
+| App | ASP.NET Core MVC + Web API (.NET 10), Razor views, CSS, JavaScript, and WebGL |
 | Data | PostgreSQL 16, EF Core 10, Entity Framework migrations |
 | Auth | ASP.NET Core Identity (users, custom roles, cookies) + JWT bearer API authentication |
 | Cache | Redis via `IDistributedCache` with an in-memory fallback |
@@ -51,7 +54,7 @@ src/
   ElevateWorkforce.Domain           # Entities, enums, business rules
   ElevateWorkforce.Application      # Services, DTOs, interfaces
   ElevateWorkforce.Infrastructure   # EF Core, repositories, storage, Redis, email, Gemini
-  ElevateWorkforce.Web              # MVC/API controllers, views, wwwroot
+  ElevateWorkforce.Web              # MVC/API controllers, views, wwwroot assets
 tests/
   ElevateWorkforce.UnitTests        # unit tests (services, domain, storage, API registration)
   ElevateWorkforce.IntegrationTests # 6 tests through a real web server + DB
