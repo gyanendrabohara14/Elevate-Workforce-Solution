@@ -3,68 +3,105 @@ services:
     build:
       context: ..
       dockerfile: Dockerfile
+
     container_name: elevateworkforce-app
+
     restart: unless-stopped
+
     depends_on:
       db:
         condition: service_healthy
+
       redis:
         condition: service_started
+
       smtp4dev:
         condition: service_started
+
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+
+      ASPNETCORE_URLS: http://0.0.0.0:10000
+
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=elevateworkforce;Username=elevateworkforce;Password=elevateworkforce"
+
       ConnectionStrings__Redis: "redis:6379"
+
       Jwt__Key: "elevateworkforce-development-key-change-me-32"
       Jwt__Issuer: "ElevateWorkforce"
       Jwt__Audience: "ElevateWorkforce.Api"
       Jwt__ExpirationMinutes: "60"
+
       Email__Host: "smtp4dev"
       Email__Port: "25"
       Email__FromEmail: "no-reply@elevateworkforce.local"
       Email__FromName: "ElevateWorkforce"
       Email__UseSsl: "false"
+
       Gemini__ApiKey: ""
       Gemini__Model: "gemini-2.5-flash"
+
       FileStorage__RootPath: "/app/wwwroot/uploads"
+
     ports:
-      - "8080:8080"
+      - "8080:10000"
+
     volumes:
       - elevateworkforce-uploads:/app/wwwroot/uploads
 
+
   db:
     image: postgres:16-alpine
+
     container_name: elevateworkforce-db
+
     restart: unless-stopped
+
     environment:
       POSTGRES_DB: elevateworkforce
       POSTGRES_USER: elevateworkforce
       POSTGRES_PASSWORD: elevateworkforce
+
     ports:
       - "5435:5432"
+
     volumes:
       - elevateworkforce-data:/var/lib/postgresql/data
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U elevateworkforce -d elevateworkforce"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U elevateworkforce -d elevateworkforce"
+        ]
+
       interval: 10s
       timeout: 5s
       retries: 5
 
+
   redis:
     image: redis:7-alpine
+
     container_name: elevateworkforce-redis
+
     restart: unless-stopped
+
     ports:
       - "6379:6379"
 
+
   smtp4dev:
     image: rnwood/smtp4dev:latest
+
     container_name: elevateworkforce-smtp4dev
+
     restart: unless-stopped
+
     ports:
       - "2525:25"
       - "5000:80"
+
 
 volumes:
   elevateworkforce-data:
