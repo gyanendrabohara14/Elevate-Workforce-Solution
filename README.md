@@ -118,7 +118,7 @@ The app seeds realistic demo data (users, companies, jobs, applications) on firs
 - `Email:Host`, `Email:Port`, `Email:FromEmail`, `Email:FromName`, `Email:UseSsl` — SMTP settings
 - `Gemini:ApiKey` — Google Gemini API key; keep this blank in the committed file and store the real key in User Secrets
 - `Gemini:Endpoint` — REST endpoint (default `https://generativelanguage.googleapis.com/v1beta`)
-- `Gemini:Model` — model name (default `gemini-2.5-flash`)
+- `Gemini:Model` — model name (default `gemini-3.6-flash`)
 - `FileStorage:RootPath` — where resumes/logos are stored (default `wwwroot/uploads`)
 
 ### Enable Gemini locally

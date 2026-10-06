@@ -39,7 +39,7 @@ services:
       Email__UseSsl: "false"
 
       Gemini__ApiKey: ""
-      Gemini__Model: "gemini-2.5-flash"
+      Gemini__Model: "gemini-3.6-flash"
 
       FileStorage__RootPath: "/app/wwwroot/uploads"
 
