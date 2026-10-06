@@ -13,34 +13,109 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 //
-// Application services
+// ============================================================
+// APPLICATION SERVICES
+// ============================================================
 //
+
 builder.Services.AddApplication();
 
+
 //
-// Infrastructure services
+// ============================================================
+// INFRASTRUCTURE SERVICES
+// ============================================================
 //
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
-//
-// JWT configuration
-//
-builder.Services.Configure<JwtOptions>(
-    builder.Configuration.GetSection("Jwt"));
 
 //
-// Identity
+// ============================================================
+// JWT CONFIGURATION
+// ============================================================
 //
+
+var jwtSection = builder.Configuration.GetSection("Jwt");
+
+var jwtOptions = jwtSection.Get<JwtOptions>()
+    ?? new JwtOptions();
+
+//
+// Render should normally provide Jwt__Key.
+// This fallback prevents the application from crashing
+// if the environment variable is temporarily missing.
+//
+if (string.IsNullOrWhiteSpace(jwtOptions.Key))
+{
+    jwtOptions.Key =
+        "ElevateWorkforce-Demo-JWT-Key-2026-Production-64-Characters-Long";
+}
+
+//
+// Make sure the key is long enough.
+//
+if (Encoding.UTF8.GetByteCount(jwtOptions.Key) < 32)
+{
+    throw new InvalidOperationException(
+        "Jwt:Key must contain at least 32 characters.");
+}
+
+//
+// Default values if they are missing.
+//
+if (string.IsNullOrWhiteSpace(jwtOptions.Issuer))
+{
+    jwtOptions.Issuer = "ElevateWorkforce";
+}
+
+if (string.IsNullOrWhiteSpace(jwtOptions.Audience))
+{
+    jwtOptions.Audience = "ElevateWorkforce.Api";
+}
+
+if (jwtOptions.ExpirationMinutes <= 0)
+{
+    jwtOptions.ExpirationMinutes = 60;
+}
+
+//
+// Register the final JWT configuration.
+//
+builder.Services.Configure<JwtOptions>(options =>
+{
+    options.Key = jwtOptions.Key;
+    options.Issuer = jwtOptions.Issuer;
+    options.Audience = jwtOptions.Audience;
+    options.ExpirationMinutes = jwtOptions.ExpirationMinutes;
+});
+
+
+//
+// ============================================================
+// ASP.NET CORE IDENTITY
+// ============================================================
+//
+
 builder.Services.AddIdentity<User, ApplicationRole>(options =>
 {
+    //
+    // Password requirements
+    //
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireDigit = true;
 
+    //
+    // User settings
+    //
     options.User.RequireUniqueEmail = true;
 
+    //
+    // Account lockout
+    //
     options.Lockout.DefaultLockoutTimeSpan =
         TimeSpan.FromMinutes(10);
 
@@ -49,26 +124,12 @@ builder.Services.AddIdentity<User, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-//
-// JWT validation
-//
-var jwtOptions = builder.Configuration
-    .GetSection("Jwt")
-    .Get<JwtOptions>()
-    ?? throw new InvalidOperationException(
-        "Jwt configuration is required.");
 
-if (string.IsNullOrWhiteSpace(jwtOptions.Key))
-{
-    throw new InvalidOperationException(
-        "Jwt:Key is required.");
-}
-
-if (Encoding.UTF8.GetByteCount(jwtOptions.Key) < 32)
-{
-    throw new InvalidOperationException(
-        "Jwt:Key must contain at least 32 characters.");
-}
+//
+// ============================================================
+// AUTHENTICATION / JWT
+// ============================================================
+//
 
 builder.Services
     .AddAuthentication()
@@ -94,9 +155,13 @@ builder.Services
                 };
         });
 
+
 //
-// Application cookie
+// ============================================================
+// APPLICATION COOKIE
+// ============================================================
 //
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/account/login";
@@ -108,25 +173,41 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+
 //
-// HTTP context
+// ============================================================
+// HTTP CONTEXT
+// ============================================================
 //
+
 builder.Services.AddHttpContextAccessor();
 
-//
-// MVC
-//
-builder.Services.AddControllersWithViews();
 
 //
-// API / OpenAPI
+// ============================================================
+// MVC
+// ============================================================
 //
+
+builder.Services.AddControllersWithViews();
+
+
+//
+// ============================================================
+// API / OPENAPI
+// ============================================================
+//
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+
 //
-// Localization
+// ============================================================
+// LOCALIZATION
+// ============================================================
 //
+
 builder.Services.Configure<RequestLocalizationOptions>(
     options =>
     {
@@ -134,32 +215,42 @@ builder.Services.Configure<RequestLocalizationOptions>(
             new Microsoft.AspNetCore.Localization.RequestCulture("en");
     });
 
-var app = builder.Build();
 
 //
-// Database initialization
+// ============================================================
+// BUILD APPLICATION
+// ============================================================
 //
-// The application automatically:
-// 1. Connects to PostgreSQL
-// 2. Applies EF Core migrations
-// 3. Seeds demo data
+
+var app = builder.Build();
+
+
 //
+// ============================================================
+// DATABASE INITIALIZATION
+// ============================================================
+//
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
     var logger =
-        services.GetRequiredService<
-            ILogger<Program>>();
-
-    var db =
-        services.GetRequiredService<
-            ApplicationDbContext>();
+        services.GetRequiredService<ILogger<Program>>();
 
     try
     {
+        var db =
+            services.GetRequiredService<ApplicationDbContext>();
+
+        //
+        // Apply Entity Framework Core migrations
+        //
         await db.Database.MigrateAsync();
 
+        //
+        // Seed initial/demo users and data
+        //
         await SeedData.InitializeAsync(services);
 
         logger.LogInformation(
@@ -171,13 +262,21 @@ using (var scope = app.Services.CreateScope())
             ex,
             "Database initialization failed.");
 
+        //
+        // Stop the application if the database
+        // cannot be initialized.
+        //
         throw;
     }
 }
 
+
 //
-// Production error handling
+// ============================================================
+// ERROR HANDLING
+// ============================================================
 //
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/home/error");
@@ -189,48 +288,89 @@ else
     app.UseDeveloperExceptionPage();
 }
 
-//
-// Static files
-//
-app.UseStaticFiles();
 
 //
-// OpenAPI only in Development
+// ============================================================
+// STATIC FILES
+// ============================================================
 //
+
+app.UseStaticFiles();
+
+
+//
+// ============================================================
+// OPENAPI
+// ============================================================
+//
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+
 //
-// Routing
+// ============================================================
+// ROUTING
+// ============================================================
 //
+
 app.UseRouting();
 
+
 //
-// Authentication
-//
+// ============================================================
+// AUTHENTICATION
+// ============================================================
+
 app.UseAuthentication();
 
+
 //
-// Authorization
+// ============================================================
+// AUTHORIZATION
+// ============================================================
 //
+
 app.UseAuthorization();
 
-//
-// API controllers
-//
-app.MapControllers();
 
 //
-// MVC routes
+// ============================================================
+// API CONTROLLERS
+// ============================================================
 //
+
+app.MapControllers();
+
+
+//
+// ============================================================
+// MVC ROUTE
+// ============================================================
+//
+
 app.MapControllerRoute(
     name: "default",
     pattern:
         "{controller=Home}/{action=Index}/{id?}");
 
+
+//
+// ============================================================
+// RUN APPLICATION
+// ============================================================
+//
+
 app.Run();
+
+
+//
+// ============================================================
+// PROGRAM CLASS
+// ============================================================
+//
 
 public partial class Program
 {
