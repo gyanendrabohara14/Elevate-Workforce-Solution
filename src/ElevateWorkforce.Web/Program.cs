@@ -1,190 +1,223 @@
-
 using ElevateWorkforce.Application;
 using ElevateWorkforce.Domain.Entities;
 using ElevateWorkforce.Infrastructure;
 using ElevateWorkforce.Infrastructure.Data;
 using ElevateWorkforce.Web;
+using ElevateWorkforce.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//
 // ============================================================
 // APPLICATION SERVICES
 // ============================================================
+//
 
 builder.Services.AddApplication();
 
+
+//
 // ============================================================
 // INFRASTRUCTURE SERVICES
 // ============================================================
+//
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+
+//
 // ============================================================
 // JWT CONFIGURATION
 // ============================================================
+//
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection("Jwt"));
 
 var jwtOptions = builder.Configuration
     .GetSection("Jwt")
     .Get<JwtOptions>();
 
-if (jwtOptions is null)
+if (jwtOptions == null)
 {
     throw new InvalidOperationException(
-        "JWT configuration is missing. Configure the Jwt section.");
+        "Jwt configuration is required.");
 }
 
 if (string.IsNullOrWhiteSpace(jwtOptions.Key))
 {
     throw new InvalidOperationException(
-        "Jwt:Key is missing. Add Jwt__Key to Render environment variables.");
+        "Jwt:Key is missing. " +
+        "Please add Jwt__Key to the Render environment variables.");
 }
 
 if (Encoding.UTF8.GetByteCount(jwtOptions.Key) < 32)
 {
     throw new InvalidOperationException(
-        "Jwt:Key must contain at least 32 bytes.");
+        "Jwt:Key must contain at least 32 characters.");
 }
 
-if (string.IsNullOrWhiteSpace(jwtOptions.Issuer))
-{
-    throw new InvalidOperationException(
-        "Jwt:Issuer is missing. Add Jwt__Issuer to Render environment variables.");
-}
 
-if (string.IsNullOrWhiteSpace(jwtOptions.Audience))
-{
-    throw new InvalidOperationException(
-        "Jwt:Audience is missing. Add Jwt__Audience to Render environment variables.");
-}
-
-// Keep JwtOptions available through dependency injection.
-builder.Services.Configure<JwtOptions>(
-    builder.Configuration.GetSection("Jwt"));
-
+//
 // ============================================================
 // IDENTITY
 // ============================================================
+//
 
-builder.Services
-    .AddIdentity<User, ApplicationRole>(options =>
-    {
-        options.Password.RequiredLength = 8;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireDigit = true;
+builder.Services.AddIdentity<User, ApplicationRole>(options =>
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireDigit = true;
 
-        options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = true;
 
-        options.Lockout.DefaultLockoutTimeSpan =
-            TimeSpan.FromMinutes(10);
+    options.Lockout.DefaultLockoutTimeSpan =
+        TimeSpan.FromMinutes(10);
 
-        options.Lockout.MaxFailedAccessAttempts = 5;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    options.Lockout.MaxFailedAccessAttempts = 5;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
+
+//
 // ============================================================
 // JWT AUTHENTICATION
 // ============================================================
+//
 
 builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme =
-            JwtBearerDefaults.AuthenticationScheme;
+    .AddAuthentication()
+    .AddJwtBearer(
+        JwtBearerDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.TokenValidationParameters =
+                new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
 
-        options.DefaultChallengeScheme =
-            JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters =
-            new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
 
-                ValidIssuer = jwtOptions.Issuer,
-                ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(
+                                jwtOptions.Key))
+                };
+        });
 
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtOptions.Key)),
 
-                ClockSkew = TimeSpan.FromMinutes(1)
-            };
-    });
-
+//
 // ============================================================
 // APPLICATION COOKIE
 // ============================================================
+//
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/account/login";
-    options.AccessDeniedPath = "/account/accessdenied";
 
-    options.Cookie.Name = "ElevateWorkforce.Auth";
+    options.AccessDeniedPath =
+        "/account/accessdenied";
+
+    options.Cookie.Name =
+        "ElevateWorkforce.Auth";
+
     options.SlidingExpiration = true;
 });
 
+
+//
 // ============================================================
 // HTTP CONTEXT
 // ============================================================
+//
 
 builder.Services.AddHttpContextAccessor();
 
+
+//
 // ============================================================
 // MVC
 // ============================================================
+//
 
 builder.Services.AddControllersWithViews();
 
+
+//
 // ============================================================
 // API / OPENAPI
 // ============================================================
+//
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+
+//
 // ============================================================
 // LOCALIZATION
 // ============================================================
+//
 
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    options.DefaultRequestCulture = new RequestCulture("en");
-});
+builder.Services.Configure<RequestLocalizationOptions>(
+    options =>
+    {
+        options.DefaultRequestCulture =
+            new Microsoft.AspNetCore.Localization.RequestCulture("en");
+    });
 
+
+//
 // ============================================================
 // BUILD APPLICATION
 // ============================================================
+//
 
 var app = builder.Build();
 
+
+//
 // ============================================================
-// DATABASE MIGRATIONS AND SEED DATA
+// DATABASE INITIALIZATION
 // ============================================================
+//
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    var logger =
+        services.GetRequiredService<
+            ILogger<Program>>();
 
     try
     {
-        var db = services.GetRequiredService<ApplicationDbContext>();
+        var db =
+            services.GetRequiredService<
+                ApplicationDbContext>();
 
+        //
+        // Apply Entity Framework Core migrations
+        //
         await db.Database.MigrateAsync();
+
+        //
+        // Seed initial/demo data
+        //
         await SeedData.InitializeAsync(services);
 
         logger.LogInformation(
@@ -192,18 +225,25 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        logger.LogCritical(ex, "Database initialization failed.");
+        logger.LogCritical(
+            ex,
+            "Database initialization failed.");
+
         throw;
     }
 }
 
+
+//
 // ============================================================
 // ERROR HANDLING
 // ============================================================
+//
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/home/error");
+
     app.UseHsts();
 }
 else
@@ -211,41 +251,89 @@ else
     app.UseDeveloperExceptionPage();
 }
 
+
+//
 // ============================================================
-// STATIC FILES AND ROUTING
+// STATIC FILES
 // ============================================================
+//
 
 app.UseStaticFiles();
+
+
+//
+// ============================================================
+// OPENAPI
+// ============================================================
+//
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+
+//
+// ============================================================
+// ROUTING
+// ============================================================
+//
+
 app.UseRouting();
 
+
+//
 // ============================================================
-// AUTHENTICATION AND AUTHORIZATION
+// AUTHENTICATION
 // ============================================================
+//
 
 app.UseAuthentication();
+
+
+//
+// ============================================================
+// AUTHORIZATION
+// ============================================================
+//
+
 app.UseAuthorization();
 
+
+//
 // ============================================================
-// ENDPOINTS
+// API CONTROLLERS
 // ============================================================
+//
 
 app.MapControllers();
+
+
+//
+// ============================================================
+// MVC ROUTES
+// ============================================================
+//
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+//
+// ============================================================
+// RUN APPLICATION
+// ============================================================
+//
+
 app.Run();
 
+
+//
 // ============================================================
 // PROGRAM CLASS
 // ============================================================
+//
 
 public partial class Program
 {
