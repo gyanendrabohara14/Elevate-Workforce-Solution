@@ -490,13 +490,6 @@ a:hover { color: var(--black); }
 
 /* ---------- Timeline ---------- */
 .timeline { list-style: none; padding: 0; margin: 0; position: relative; }
-.timeline::before {
-    content: "";
-    position: absolute;
-    left: 15px; top: 8px; bottom: 8px;
-    width: 2px;
-    background: var(--border);
-}
 .timeline li { position: relative; padding-left: 44px; margin-bottom: 1.2rem; }
 .timeline li::before {
     content: "";
